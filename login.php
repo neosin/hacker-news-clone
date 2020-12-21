@@ -18,6 +18,8 @@ require __DIR__ . '/views/header.php';
     <?php endif; ?>
 </section>
 
+<a href="signup.php">register account</a>
+
 <?php
 require __DIR__ . '/views/footer.php';
 ?>
