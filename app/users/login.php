@@ -16,15 +16,20 @@ if (isset($_POST['email'], $_POST['password'])) {
     $user = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
+        // No user
+        $_SESSION['message'] = "Not registered";
         header("Location: /../../login.php");
         exit;
     }
 
     if (password_verify($_POST['password'], $user['password'])) {
         unset($user['password']);
-        unset($_POST);
         $_SESSION['user'] = $user;
-        // $_SESSION['auth'] = true;
+    } else {
+        // Wrong password
+        $_SESSION['message'] = "Wrong password";
+        header("Location: /../../login.php");
+        exit;
     }
 }
 
