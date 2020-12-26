@@ -2,6 +2,22 @@
 
 declare(strict_types=1);
 
+// login functions
+
+function fetchUserData(array $user, object $db): void
+{
+    $id = $user['id'];
+    $stmnt = $db->prepare("SELECT id, user_name, email, bio, image_url FROM users WHERE id = :id");
+    $stmnt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $_SESSION['user'] = $stmnt->fetch(PDO::FETCH_ASSOC);
+}
+
 function loginUser(array $user, object $db): bool
 {
     $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
@@ -30,7 +46,7 @@ function loginUser(array $user, object $db): bool
     }
 }
 
-//Signup functions
+// signup functions
 
 function emptyInput(array $user): bool
 {
@@ -54,8 +70,9 @@ function validEmail(string $email): bool
 {
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 function userNameExists(string $userName, object $db): bool
@@ -72,9 +89,9 @@ function userNameExists(string $userName, object $db): bool
 
     if ($result) {
         return true;
+    } else {
+        return false;
     }
-
-    return false;
 }
 
 function userEmailExists(string $email, object $db): bool
@@ -91,9 +108,9 @@ function userEmailExists(string $email, object $db): bool
 
     if ($result) {
         return true;
+    } else {
+        return false;
     }
-
-    return false;
 }
 
 function createUser(array $newUser, object $db): void
@@ -108,4 +125,14 @@ function createUser(array $newUser, object $db): void
     }
 }
 
-// validUserName ? 
+// validUserName ?
+
+// edit profile functions
+
+// editUsername
+
+// editBio
+
+// editProfilePicture
+
+// changePassword

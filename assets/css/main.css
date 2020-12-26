@@ -29,3 +29,9 @@ nav ul {
 nav ul li {
   margin: var(--min-margin);
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 0px calc(var(--min-margin) * 4);
+}
