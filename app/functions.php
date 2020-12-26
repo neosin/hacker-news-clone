@@ -2,23 +2,32 @@
 
 declare(strict_types=1);
 
-//Login functions
-// checkUserName
-// checkPassword
-
-function loginUser(array $user, object $db): void
+function loginUser(array $user, object $db): bool
 {
-
-    $stmnt = $db->prepare("SELECT email, user_name FROM users WHERE email = :email");
-    $stmnt->bindParam(":email", $user['email'], PDO::PARAM_STR);
+    $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+    $stmnt = $db->prepare("SELECT * FROM users WHERE email = :email");
+    $stmnt->bindParam(':email', $email, PDO::PARAM_STR);
     $stmnt->execute();
 
     if (!$stmnt) {
         die(var_dump($db->errorInfo()));
     }
 
-    $user = $stmnt->fetch(PDO::FETCH_ASSOC);
-    $_SESSION['user'] = $user;
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC); // rename this to something more suiting.
+
+    if (!$result) {
+        $_SESSION['message'] = "Not registred";
+        return false;
+    }
+
+    if (password_verify($user['password'], $result['password'])) {
+        unset($user['password'], $result['password']);
+        $_SESSION['user'] = $result;
+        return true;
+    } else {
+        $_SESSION['message'] = "Wrong password";
+        return false;
+    }
 }
 
 //Signup functions
@@ -92,7 +101,7 @@ function createUser(array $newUser, object $db): void
     $stmnt = $db->prepare("INSERT INTO users (user_name, email, password) VALUES (:user_name, :email, :password)");
     $stmnt->bindParam(":user_name", $newUser['user_name'], PDO::PARAM_STR);
     $stmnt->bindParam(":email", $newUser['email'], PDO::PARAM_STR);
-    $stmnt->bindParam(":password", $newUser['password'], PDO::PARAM_STR);
+    $stmnt->bindParam(":password", $newUser['password_hash'], PDO::PARAM_STR);
     $stmnt->execute();
     if (!$stmnt) {
         die(var_dump($db->errorInfo()));

@@ -25,24 +25,24 @@ if (
 
     if (userNameExists($newUser['user_name'], $db)) {
         $_SESSION['message'] = "Username already registered";
-        header("Location: /../../signup.php");
+        header("Location: /../../login.php");
         exit;
     } else {
         $newUser['user_name'] = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
     }
 
-    if (userEmailExists($newUser['email'], $db)) {
-        $_SESSION['message'] = "Email already registered";
+    if (validEmail($newUser['email'])) {
+        $newUser['email'] = filter_var($_POST['signup-email'], FILTER_SANITIZE_EMAIL);
+    } else {
+        $_SESSION['message'] = "Invalid email";
         header("Location: /../../signup.php");
         exit;
-    } else {
-        if (validEmail($newUser['email'])) {
-            $newUser['email'] = filter_var($_POST['signup-email'], FILTER_SANITIZE_EMAIL);
-        } else {
-            $_SESSION['message'] = "Invalid email";
-            header("Location: /../../signup.php");
-            exit;
-        }
+    }
+
+    if (userEmailExists($newUser['email'], $db)) {
+        $_SESSION['message'] = "Email already registered";
+        header("Location: /../../login.php");
+        exit;
     }
 
     if (!passwordCheck($newUser['password'], $newUser['password-check'])) {
@@ -50,11 +50,12 @@ if (
         header("Location: /../../signup.php");
         exit;
     } else {
-        $newUser['password'] = password_hash($newUser['password'], PASSWORD_DEFAULT);
-        array_pop($newUser);
+        $newUser['password_hash'] = password_hash($newUser['password'], PASSWORD_DEFAULT);
     }
 
     createUser($newUser, $db);
+    loginUser($newUser, $db);
+    unset($newUser);
 }
 
-header("location: /../../login.php");
+header("location: /../../index.php");
