@@ -35,3 +35,8 @@ form {
   flex-direction: column;
   margin: 0px calc(var(--min-margin) * 4);
 }
+
+form img {
+  width: 200px;
+  height: 200px;
+}

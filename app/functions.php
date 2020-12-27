@@ -130,8 +130,30 @@ function createUser(array $newUser, object $db): void
 // edit profile functions
 
 // editUsername
+function editUserName(int $id, string $userName, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE users SET user_name = :user_name WHERE id = :id");
+    $stmnt->bindParam(":user_name", $userName, PDO::PARAM_STR);
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
 
 // editBio
+function editBio(int $id, string $bio, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE users SET bio = :bio WHERE id = :id");
+    $stmnt->bindParam(":bio", $bio, PDO::PARAM_STR);
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
 
 // editProfilePicture
 

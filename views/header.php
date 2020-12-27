@@ -1,3 +1,9 @@
+<?php
+if (isset($_SESSION['user'])) {
+    fetchUserData($_SESSION['user'], $db);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
