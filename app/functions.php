@@ -18,7 +18,7 @@ function fetchUserData(array $user, object $db): void
     $_SESSION['user'] = $stmnt->fetch(PDO::FETCH_ASSOC);
 }
 
-function loginUser(array $user, object $db): bool
+function loginUser(array $user, object $db): bool // is this the way for error-messages? 
 {
     $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
     $stmnt = $db->prepare("SELECT * FROM users WHERE email = :email");
@@ -158,3 +158,14 @@ function editBio(int $id, string $bio, object $db): void
 // editProfilePicture
 
 // changePassword
+function changePassword(int $id, string $newPassword, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE users SET password = :password WHERE id = :id");
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->bindParam(":password", $newPassword, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}

@@ -31,7 +31,10 @@ if (isset($_SESSION['user'])) {
         $user['bio'] = filter_var($_POST['bio'], FILTER_SANITIZE_STRING);
         editBio($user['id'], $user['bio'], $db);
     }
+
+    if (isset($_POST['current_password'], $_POST['password'], $_POST['password_check'])) {
+        echo $_POST['current_password'];
+    }
 }
 
-
-header("location: /../../profile.php");
+// header("location: /../../profile.php");
