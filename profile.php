@@ -22,8 +22,8 @@ print_r($_SESSION['user']);
             <?php endif; ?>
             <p><?= $_SESSION['user']['user_name'] ?></p>
             <p><?= $_SESSION['user']['bio'] ?></p>
-            <a href="/profile.php?edit-profile=profile">edit profile</a>
-            <a href="/app/users/logout.php">logout</a>
+            <a href="/profile.php?edit-profile=profile"><button>edit profile</button></a>
+            <a href="/app/users/logout.php"><button>logout</button></a>
         <?php elseif ($_GET['edit-profile'] === "profile") : ?>
             <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
                 <label for="profile_picture">profile picture</label>
@@ -39,16 +39,21 @@ print_r($_SESSION['user']);
                 <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
                 <button type="submit">submit</button>
             </form>
-            <a href="/profile.php?edit-profile=password"><button>change password</button></a>
+            <a href="/profile.php?edit-profile=password"><button>change password and email</button></a>
         <?php elseif ($_GET['edit-profile'] === "password") : ?>
             <form action="/app/users/profile.php" method="post">
                 <label for="current_password">current password</label>
                 <input type="password" name="current_password" id="current_password" required>
-                <label for="password">new password</label>
-                <input type="password" name="password" id="password" required>
+                <label for="new_password">new password</label>
+                <input type="password" name="new_password" id="new_password" required>
                 <label for="password_check">repeat new password</label>
                 <input type="password" name="password_check" id="password_check" required>
-                <button type="submit">change</button>
+                <button type="submit">change password</button>
+            </form>
+            <form>
+                <label for="email">email</label>
+                <input type="email" name="email" id="email" value="<?= $_SESSION['user']['email'] ?>" required>
+                <button type="submit">change email</button>
             </form>
         <?php endif; ?>
         <?php if (isset($_SESSION['message'])) : ?>

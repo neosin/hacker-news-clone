@@ -14,13 +14,13 @@ if (isset($_SESSION['user'])) {
 
         if (emptyInput($user)) {
             $_SESSION['message'] = "Empty fields";
-            header("location: /../../profile.php?edit-profile=1");
+            header("location: /../../profile.php?edit-profile=profile");
             exit; // ? 
         }
 
         if (userNameExists($user['new_user_name'], $db)) {
             $_SESSION['message'] = "Username taken";
-            header("location: /../../profile.php?edit-profile=1");
+            header("location: /../../profile.php?edit-profile=profile");
             exit; // ? 
         }
 
@@ -32,9 +32,23 @@ if (isset($_SESSION['user'])) {
         editBio($user['id'], $user['bio'], $db);
     }
 
-    if (isset($_POST['current_password'], $_POST['password'], $_POST['password_check'])) {
-        echo $_POST['current_password'];
+    if (isset($_POST['current_password'], $_POST['new_password'], $_POST['password_check'])) {
+
+        if (!checkPassword($user['id'], $_POST['current_password'], $db)) {
+            header("location: /../../profile.php?edit-profile=password");
+            exit;
+        }
+
+        if (!passwordMatch($_POST['new_password'], $_POST['password_check'])) {
+            header("location: /../../profile.php?edit-profile=password");
+            exit;
+        }
+
+        changePassword($user['id'], $_POST['new_password'], $db);
+        $_SESSION['message'] = "Password changed!";
+        header("location: /../../profile.php?edit-profile=password");
+        exit;
     }
 }
 
-// header("location: /../../profile.php");
+header("location: /../../profile.php");

@@ -45,7 +45,7 @@ if (
         exit;
     }
 
-    if (!passwordCheck($newUser['password'], $newUser['password-check'])) {
+    if (!passwordMatch($newUser['password'], $newUser['password-check'])) {
         $_SESSION['message'] = "Not the same password!";
         header("Location: /../../signup.php");
         exit;
