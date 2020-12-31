@@ -48,8 +48,9 @@ function loginUser(array $user, object $db): bool // is this the way for error-m
 
 // signup functions
 
-function emptyInput(array $user): bool
+function emptyInput(array $user): bool // both array and strings ? 
 {
+
     foreach ($user as $userProperty) {
         if (empty($userProperty)) {
             return true;
@@ -76,10 +77,10 @@ function validEmail(string $email): bool
     }
 }
 
-function userNameExists(string $userName, object $db): bool
+function userEmailExists(string $email, object $db): bool
 {
-    $stmnt = $db->prepare("SELECT user_name FROM users WHERE user_name = :user_name");
-    $stmnt->bindParam(":user_name", $userName, PDO::PARAM_STR);
+    $stmnt = $db->prepare("SELECT email FROM users WHERE email = :email");
+    $stmnt->bindParam(":email", $email, PDO::PARAM_STR);
     $stmnt->execute();
 
     if (!$stmnt) {
@@ -95,10 +96,10 @@ function userNameExists(string $userName, object $db): bool
     }
 }
 
-function userEmailExists(string $email, object $db): bool
+function userNameExists(string $userName, object $db): bool
 {
-    $stmnt = $db->prepare("SELECT email FROM users WHERE email = :email");
-    $stmnt->bindParam(":email", $email, PDO::PARAM_STR);
+    $stmnt = $db->prepare("SELECT user_name FROM users WHERE user_name = :user_name");
+    $stmnt->bindParam(":user_name", $userName, PDO::PARAM_STR);
     $stmnt->execute();
 
     if (!$stmnt) {
@@ -155,7 +156,6 @@ function editBio(int $id, string $bio, object $db): void
 }
 
 // editEmail
-
 
 // editProfilePicture
 

@@ -8,8 +8,6 @@ if (!isset($_SESSION['user'])) {
 
 fetchUserData($_SESSION['user'], $db);
 
-print_r($_SESSION['user']);
-
 ?>
 <main>
     <section>
@@ -39,7 +37,8 @@ print_r($_SESSION['user']);
                 <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
                 <button type="submit">submit</button>
             </form>
-            <a href="/profile.php?edit-profile=password"><button>change password and email</button></a>
+            <a href="/profile.php?edit-profile=password"><button>change password</button></a>
+            <a href="/profile.php?edit-profile=email"><button>change email</button></a>
         <?php elseif ($_GET['edit-profile'] === "password") : ?>
             <form action="/app/users/profile.php" method="post">
                 <label for="current_password">current password</label>
@@ -48,12 +47,17 @@ print_r($_SESSION['user']);
                 <input type="password" name="new_password" id="new_password" required>
                 <label for="password_check">repeat new password</label>
                 <input type="password" name="password_check" id="password_check" required>
-                <button type="submit">change password</button>
+                <button type="submit">submit</button>
+                <!-- check for empty input -->
             </form>
-            <form>
-                <label for="email">email</label>
+        <?php elseif ($_GET['edit-profile'] === 'email') : ?>
+            <form action="/app/users/profile.php" method="post">
+                <label for="email">edit email</label>
                 <input type="email" name="email" id="email" value="<?= $_SESSION['user']['email'] ?>" required>
-                <button type="submit">change email</button>
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" required>
+                <button type="submit">submit</button>
+                <!-- check for empty input -->
             </form>
         <?php endif; ?>
         <?php if (isset($_SESSION['message'])) : ?>
@@ -62,8 +66,6 @@ print_r($_SESSION['user']);
         <?php endif; ?>
     </section>
 </main>
-
-
 <?php
 require __DIR__ . '/views/footer.php';
 ?>

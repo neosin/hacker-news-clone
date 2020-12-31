@@ -30,13 +30,17 @@ nav ul li {
   margin: var(--min-margin);
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+main {
   margin: 0px calc(var(--min-margin) * 4);
 }
 
-form img {
-  width: 200px;
-  height: 200px;
+form {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+textarea {
+  resize: none;
+  font-family: sans-serif;
 }
