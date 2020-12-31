@@ -9,7 +9,31 @@ if (isset($_SESSION['user'])) {
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
 
-    if (isset($_FILES['profile_picture'])) {
+    if (isset($_FILES['profile_picture'])) { // Why does this trigger when no file is uploaded? 
+
+        switch ($_FILES['profile_picture']['type']) {
+            case 'image/gif':
+                break;
+            case 'image/jpeg':
+                break;
+            case 'image/png':
+                break;
+            default:
+                $_SESSION['message'] = "Unsupported format";
+                header("location: /../../profile.php?edit-profile=profile");
+                exit;
+                break;
+        }
+
+        if ($_FILES['profile_picture']['size'] >= 2000000) {
+            $_SESSION['message'] = "File is to big, needs to be smaller than 2mb";
+            header("location: /../../profile.php?edit-profile=profile");
+            exit;
+        }
+
+        $dest = __DIR__ . '/uploads/' . $_SESSION['user']['user_name'] . '-profile-picture-' . $_FILES['profile_picture']['name'];
+        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dest);
+        editProfilePicture($user['id'], $dest, $db);
     }
 
     if (isset($_POST['user_name']) && $_POST['user_name'] !== $_SESSION['user']['user_name']) {

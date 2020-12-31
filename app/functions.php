@@ -170,6 +170,21 @@ function editEmail(int $id, string $newEmail, object $db): void
 }
 
 // editProfilePicture
+function editProfilePicture(int $id, string $imageURL, object $db): void
+{
+    $imageURL = explode("/app", $imageURL);
+    $imageURL = '/app' . $imageURL[1];
+    // die(var_dump($imageURL));
+
+    $stmnt = $db->prepare("UPDATE users SET image_url = :image_url WHERE id = :id");
+    $stmnt->bindParam(":image_url", $imageURL, PDO::PARAM_STR);
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
 
 function checkPassword(int $id, string $password, object $db): bool
 {

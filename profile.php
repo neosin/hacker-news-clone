@@ -8,7 +8,7 @@ if (!isset($_SESSION['user'])) {
 
 fetchUserData($_SESSION['user'], $db);
 
-print_r($_SESSION['user']);
+// print_r($_SESSION['user']);
 
 ?>
 <main>
@@ -33,6 +33,9 @@ print_r($_SESSION['user']);
                     <img src="<?= $_SESSION['user']['image_url'] ?>" alt="profile picture">
                 <?php endif; ?>
                 <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png">
+                <button type="submit">upload</button>
+            </form>
+            <form action="/app/users/profile.php" method="post">
                 <label for="user_name">user name</label>
                 <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">
                 <label for="bio">bio</label>
@@ -50,7 +53,6 @@ print_r($_SESSION['user']);
                 <label for="password_check">repeat new password</label>
                 <input type="password" name="password_check" id="password_check" required>
                 <button type="submit">submit</button>
-                <!-- check for empty input -->
             </form>
         <?php elseif ($_GET['edit-profile'] === 'email') : ?>
             <form action="/app/users/profile.php" method="post">
@@ -59,7 +61,6 @@ print_r($_SESSION['user']);
                 <label for="password">password</label>
                 <input type="password" name="password" id="password" required>
                 <button type="submit">submit</button>
-                <!-- check for empty input -->
             </form>
         <?php endif; ?>
         <?php if (isset($_SESSION['message'])) : ?>
