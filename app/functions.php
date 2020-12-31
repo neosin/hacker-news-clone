@@ -157,6 +157,18 @@ function editBio(int $id, string $bio, object $db): void
 
 // editEmail
 
+function editEmail(int $id, string $newEmail, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE users SET email = :email WHERE id = :id");
+    $stmnt->bindParam(":email", $newEmail, PDO::PARAM_STR);
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
 // editProfilePicture
 
 function checkPassword(int $id, string $password, object $db): bool

@@ -9,6 +9,9 @@ if (isset($_SESSION['user'])) {
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
 
+    if (isset($_FILES['profile_picture'])) {
+    }
+
     if (isset($_POST['user_name']) && $_POST['user_name'] !== $_SESSION['user']['user_name']) {
         $user['new_user_name'] = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
 
@@ -33,7 +36,8 @@ if (isset($_SESSION['user'])) {
     }
 
     if (isset($_POST['email'], $_POST['password'])) {
-        $user['email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+
+        $user['new_email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $user['password'] = $_POST['password'];
 
         if (emptyInput($user)) {
@@ -47,17 +51,22 @@ if (isset($_SESSION['user'])) {
             exit;
         }
 
-        if (!validEmail($user['email'])) {
+        if (!validEmail($user['new_email'])) {
             $_SESSION['message'] = "Invalid email-adress";
             header("location: /../../profile.php?edit-profile=email");
             exit;
         }
 
-        if (userEmailExists($user['email'], $db)) {
+        if (userEmailExists($user['new_email'], $db)) {
             $_SESSION['message'] = "Email-adress already registered";
             header("location: /../../profile.php?edit-profile=email");
             exit;
         }
+
+        editEmail($user['id'], $user['new_email'], $db);
+        $_SESSION['message'] = "Email changed to " . $user['new_email'];
+        header("location: /../../profile.php?edit-profile=email");
+        exit;
     }
 
     if (isset($_POST['current_password'], $_POST['new_password'], $_POST['password_check'])) {
@@ -79,4 +88,4 @@ if (isset($_SESSION['user'])) {
     }
 }
 
-// header("location: /../../profile.php");
+header("location: /../../profile.php");

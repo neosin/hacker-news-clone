@@ -8,6 +8,8 @@ if (!isset($_SESSION['user'])) {
 
 fetchUserData($_SESSION['user'], $db);
 
+print_r($_SESSION['user']);
+
 ?>
 <main>
     <section>
