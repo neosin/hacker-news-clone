@@ -1,16 +1,16 @@
 <?php
 
 declare(strict_types=1);
+
 require __DIR__ . '/../autoload.php';
 
 if (isset($_SESSION['user'])) {
-
     $user = [
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
 
-    if (isset($_FILES['profile_picture'])) { // Why does this trigger when no file is uploaded? 
-
+    if (isset($_FILES['profile_picture'])) {
+        // Why does this trigger when no file is uploaded?
         switch ($_FILES['profile_picture']['type']) {
             case 'image/gif':
                 break;
@@ -60,7 +60,6 @@ if (isset($_SESSION['user'])) {
     }
 
     if (isset($_POST['email'], $_POST['password'])) {
-
         $user['new_email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $user['password'] = $_POST['password'];
 
@@ -94,7 +93,6 @@ if (isset($_SESSION['user'])) {
     }
 
     if (isset($_POST['current_password'], $_POST['new_password'], $_POST['password_check'])) {
-
         if (!checkPassword($user['id'], $_POST['current_password'], $db)) {
             header("location: /../../profile.php?edit-profile=password");
             exit;
