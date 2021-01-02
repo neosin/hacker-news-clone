@@ -1,7 +1,6 @@
 <nav>
     <ul>
         <li><a href="/../index.php">home</a></li>
-        <li><a href="">test</a></li>
         <?php if (isset($_SESSION['user'])) : ?>
             <li><a href="profile.php"><?= $_SESSION['user']['user_name'] ?></a></li>
         <?php else : ?>

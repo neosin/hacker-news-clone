@@ -38,9 +38,12 @@ fetchUserData($_SESSION['user'], $db);
             <form action="/app/users/profile.php" method="post">
                 <label for="user_name">user name</label>
                 <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">
+                <button type="submit">confirm username</button>
+            </form>
+            <form action="/app/users/profile.php" method="post">
                 <label for="bio">bio</label>
                 <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
-                <button type="submit">submit</button>
+                <button type="submit">confirm bio</button>
             </form>
             <a href="/profile.php?edit-profile=password"><button>change password</button></a>
             <a href="/profile.php?edit-profile=email"><button>change email</button></a>
