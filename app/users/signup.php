@@ -5,7 +5,6 @@ declare(strict_types=1);
 require __DIR__ . '/../autoload.php';
 
 if (isset($_POST['username'], $_POST['signup-email'], $_POST['signup-password'], $_POST['password-check'])) {
-
     $newUser = ["user_name" => $_POST['username'], "email" => $_POST['signup-email'], "password" => $_POST['signup-password'], "password-check" => $_POST['password-check']];
 
     if (emptyInput($newUser)) {
