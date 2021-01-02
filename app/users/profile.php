@@ -9,8 +9,7 @@ if (isset($_SESSION['user'])) {
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
 
-    if (isset($_FILES['profile_picture'])) {
-        // Why does this trigger when no file is uploaded?
+    if (isset($_FILES['profile_picture'])) { // Why does this trigger when no file is uploaded?
         switch ($_FILES['profile_picture']['type']) {
             case 'image/gif':
                 break;

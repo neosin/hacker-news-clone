@@ -219,3 +219,60 @@ function changePassword(int $id, string $newPassword, object $db): void
         die(var_dump($db->errorInfo()));
     }
 }
+
+// post functions
+
+// createPost
+
+// deletePost
+
+// addComment
+
+// editComment
+
+// deleteComment
+
+// fetchPosts
+function fetchPosts(int $offset, object $db): array
+{
+    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY creation LIMIT 10 OFFSET :offset;");
+    $stmnt->bindParam(":offset", $offset, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    return $stmnt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// fetchPoster
+function fetchPoster(int $id, object $db): string
+{
+    $stmnt = $db->prepare("SELECT user_name FROM users WHERE id = :id;");
+    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    return $result['user_name'];
+}
+
+// fetchNumberOfPosts
+function fetchNumberOfPosts($db): int
+{
+    $stmnt = $db->query("SELECT COUNT(id) as 'number-of-posts' FROM posts");
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    return (int)$result['number-of-posts'];
+}
