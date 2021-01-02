@@ -29,7 +29,7 @@ function loginUser(array $user, object $db): bool // is this the way for error-m
         die(var_dump($db->errorInfo()));
     }
 
-    $result = $stmnt->fetch(PDO::FETCH_ASSOC); // rename this to something more suiting.
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
         $_SESSION['message'] = "Not registred";
@@ -62,7 +62,7 @@ function emptyInput(array $user): bool // both array and strings ?
 function passwordMatch(string $password, string $passwordMatch): bool
 {
     if ($password !== $passwordMatch) {
-        $_SESSION['message'] = "Unmatching passwords";
+        // $_SESSION['message'] = "Unmatching passwords";
         return false;
     }
     return true;
@@ -174,7 +174,6 @@ function editProfilePicture(int $id, string $imageURL, object $db): void
 {
     $imageURL = explode("/app", $imageURL);
     $imageURL = '/app' . $imageURL[1];
-    // die(var_dump($imageURL));
 
     $stmnt = $db->prepare("UPDATE users SET image_url = :image_url WHERE id = :id");
     $stmnt->bindParam(":image_url", $imageURL, PDO::PARAM_STR);

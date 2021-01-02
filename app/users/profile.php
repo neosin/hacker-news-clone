@@ -110,6 +110,8 @@ if (isset($_SESSION['user'])) {
         header("location: /../../profile.php?edit-profile=password");
         exit;
     }
+
+    unset($user);
 }
 
 header("location: /../../profile.php");
