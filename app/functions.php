@@ -18,7 +18,8 @@ function fetchUserData(array $user, object $db): void
     $_SESSION['user'] = $stmnt->fetch(PDO::FETCH_ASSOC);
 }
 
-function loginUser(array $user, object $db): bool // is this the way for error-messages? 
+// is this the way for error-messages? 
+function loginUser(array $user, object $db): bool
 {
     $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
     $stmnt = $db->prepare("SELECT * FROM users WHERE email = :email");
@@ -48,7 +49,8 @@ function loginUser(array $user, object $db): bool // is this the way for error-m
 
 // signup functions
 
-function emptyInput(array $user): bool // both array and strings ? 
+// both array and strings ? 
+function emptyInput(array $user): bool
 {
 
     foreach ($user as $userProperty) {
