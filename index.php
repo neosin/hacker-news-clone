@@ -25,7 +25,11 @@ if (isset($_GET['page'])) {
                     <h2><?= $post['title'] ?></h2>
                 </a>
                 <p><?= $post['description'] ?></p>
-                <p>upvotes: <?= $post['upvotes'] ?></p>
+                <div>
+                    <button>upvote</button>
+                    <p><?= $post['upvotes'] ?></p>
+                    <button>downvote</button>
+                </div>
                 <p>comments: <?= $post['comments'] ?></p>
                 <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
             </article>

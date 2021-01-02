@@ -232,6 +232,56 @@ function changePassword(int $id, string $newPassword, object $db): void
 
 // deleteComment
 
+// checkUpvote
+function checkUpvote(int $userId, int $postId, object $db): bool
+{
+    $stmnt = $db->prepare("SELECT * FROM upvotes WHERE user_id = :user_id AND post_id = :post_id;");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return false;
+    }
+
+    return true;
+}
+
+// addUpvote
+function addUpvote(int $postId, object $db): void
+{
+    $post = fetchPost($postId, $db);
+    $upvotes = (int)$post['upvotes'];
+    $upvotes += 1;
+    $stmnt = $db->prepare("UPDATE posts SET upvotes = :upvotes");
+    $stmnt->bindParam(":upvotes", $upvotes, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+// fetchPost
+function fetchPost(int $postId, object $db): array
+{
+    $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    return $stmnt->fetch(PDO::FETCH_ASSOC);
+}
+
 // fetchPosts
 function fetchPosts(int $offset, object $db): array
 {
