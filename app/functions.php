@@ -233,7 +233,7 @@ function changePassword(int $id, string $newPassword, object $db): void
 // deleteComment
 
 // checkUpvote
-function checkUpvote(int $userId, int $postId, object $db): bool
+function userUpvote(int $userId, int $postId, object $db): bool
 {
     $stmnt = $db->prepare("SELECT * FROM upvotes WHERE user_id = :user_id AND post_id = :post_id;");
     $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
