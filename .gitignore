@@ -1,3 +1,4 @@
 .DS_Store
 *.numbers
 app/users/uploads/*
+slask.php

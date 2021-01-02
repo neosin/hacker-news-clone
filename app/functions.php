@@ -232,42 +232,6 @@ function changePassword(int $id, string $newPassword, object $db): void
 
 // deleteComment
 
-// checkUpvote
-function userUpvote(int $userId, int $postId, object $db): bool
-{
-    $stmnt = $db->prepare("SELECT * FROM upvotes WHERE user_id = :user_id AND post_id = :post_id;");
-    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
-    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
-    $stmnt->execute();
-
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
-    }
-
-    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$result) {
-        return false;
-    }
-
-    return true;
-}
-
-// addUpvote
-function addUpvote(int $postId, object $db): void
-{
-    $post = fetchPost($postId, $db);
-    $upvotes = (int)$post['upvotes'];
-    $upvotes += 1;
-    $stmnt = $db->prepare("UPDATE posts SET upvotes = :upvotes");
-    $stmnt->bindParam(":upvotes", $upvotes, PDO::PARAM_INT);
-    $stmnt->execute();
-
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
-    }
-}
-
 // fetchPost
 function fetchPost(int $postId, object $db): array
 {
@@ -280,20 +244,6 @@ function fetchPost(int $postId, object $db): array
     }
 
     return $stmnt->fetch(PDO::FETCH_ASSOC);
-}
-
-// fetchPosts
-function fetchPosts(int $offset, object $db): array
-{
-    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY creation LIMIT 10 OFFSET :offset;");
-    $stmnt->bindParam(":offset", $offset, PDO::PARAM_INT);
-    $stmnt->execute();
-
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
-    }
-
-    return $stmnt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // fetchPoster
@@ -310,6 +260,20 @@ function fetchPoster(int $id, object $db): string
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     return $result['user_name'];
+}
+
+// fetchPosts
+function fetchPosts(int $offset, object $db): array
+{
+    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY creation LIMIT 10 OFFSET :offset;");
+    $stmnt->bindParam(":offset", $offset, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    return $stmnt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // fetchNumberOfPosts

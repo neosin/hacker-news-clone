@@ -8,7 +8,6 @@ if (isset($_GET['page'])) {
 } else {
     $posts = fetchPosts(0, $db);
 }
-
 ?>
 
 <main>
