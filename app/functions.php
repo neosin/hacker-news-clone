@@ -261,9 +261,19 @@ function fetchPoster(int $id, object $db): string
 }
 
 // fetchPosts
-function fetchPosts(int $offset, object $db): array
+function fetchPosts(int $page, object $db): array
 {
-    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY creation LIMIT 10 OFFSET :offset;");
+    $offset = 0;
+    $numberOfPosts = fetchNumberOfPosts($db);
+
+    for ($i = 0; $i < $page; $i++) {
+        $offset += 10;
+        if ($offset >= $numberOfPosts) {
+            $offset = $numberOfPosts - 10;
+        }
+    }
+
+    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY id LIMIT 10 OFFSET :offset;");
     $stmnt->bindParam(":offset", $offset, PDO::PARAM_INT);
     $stmnt->execute();
 
