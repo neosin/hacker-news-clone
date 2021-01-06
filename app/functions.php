@@ -356,9 +356,10 @@ function fetchPoster(int $id, object $db): string
     return $result['user_name'];
 }
 
-function fetchPosts(int $page, object $db): array
+function fetchPosts(int $page, object $db, bool $orderByUpvotes = false): array
 {
     $offset = 0;
+    $sql = "";
     $numberOfPosts = fetchTotalNumberOfPosts($db);
 
     for ($i = 0; $i < $page; $i++) {
@@ -368,7 +369,31 @@ function fetchPosts(int $page, object $db): array
         }
     }
 
-    $stmnt = $db->prepare("SELECT * FROM posts ORDER BY id LIMIT 10 OFFSET :offset;");
+    if ($orderByUpvotes) {
+        $sql = "SELECT p.*, COALESCE(v.upvote_count, 0) AS upvotes
+        FROM posts p
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS upvote_count
+            FROM upvotes
+            GROUP BY post_id
+        ) v
+        ON p.id = v.post_id
+        ORDER BY upvotes DESC, p.creation_time DESC
+        LIMIT 10 OFFSET :offset;";
+    } else {
+        $sql = "SELECT p.*, COALESCE(v.upvote_count, 0) AS upvotes
+        FROM posts p
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS upvote_count
+            FROM upvotes
+            GROUP BY post_id
+        ) v
+        ON p.id = v.post_id
+        ORDER BY p.creation_time DESC
+        LIMIT 10 OFFSET :offset;";
+    }
+
+    $stmnt = $db->prepare($sql);
     $stmnt->bindParam(":offset", $offset, PDO::PARAM_INT);
     $stmnt->execute();
 
@@ -378,23 +403,26 @@ function fetchPosts(int $page, object $db): array
 
     $result = $stmnt->fetchAll(PDO::FETCH_ASSOC);
 
-    for ($i = 0; $i < sizeof($result); $i++) { //inner-join?
-        $result[$i]['upvotes'] = fetchUpvotes((int)$result[$i]['id'], $db);
-    }
+    // for ($i = 0; $i < sizeof($result); $i++) { //inner-join?
+    //     $result[$i]['upvotes'] = fetchUpvotes((int)$result[$i]['id'], $db);
+    // }
 
     return $result;
 }
 
-function sortPostsByDate(array &$posts): void
-{
-    usort($array, function ($dateOne, $dateTwo) {
-        return $dateTwo['creation_time'] <=> $dateOne['creation_time'];
-    });
-}
+// function sortPostsByDate(array &$posts): void
+// {
+//     usort($posts, function ($dateOne, $dateTwo) {
+//         return $dateTwo['creation_time'] <=> $dateOne['creation_time'];
+//     });
+// }
 
-function sortPostsByLikes(array &$posts): void
-{
-}
+// function sortPostsByUpvotes(array &$posts): void
+// {
+//     usort($posts, function ($comparePost, $post) {
+//         return $post['upvotes'] <=> $comparePost['upvotes'];
+//     });
+// }
 
 function fetchTotalNumberOfPosts($db): int
 {
@@ -446,8 +474,6 @@ function userUpvote(int $userId, int $postId, object $db): bool
 
     return true;
 }
-
-//modifyUpvote
 
 function toggleUpvote(int $userId, int $postId, object $db): void
 {

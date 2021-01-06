@@ -3,11 +3,25 @@ require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
 if (isset($_GET['page'])) {
-    $page = filter_var($_GET['page'], FILTER_SANITIZE_NUMBER_INT);
-    $posts = fetchPosts($page, $db);
+    $page = (int)filter_var($_GET['page'], FILTER_SANITIZE_NUMBER_INT);
 } else {
     $page = 0;
-    $posts = fetchPosts($page, $db);
+}
+
+
+if (!isset($_GET['order_by'])) {
+    $_GET['order_by'] = 'new';
+}
+
+if (isset($_GET['order_by'])) {
+    $order = filter_var($_GET['order_by'], FILTER_SANITIZE_STRING);
+    if ($order === 'new') {
+        $posts = fetchPosts($page, $db);
+    } elseif ($order === 'top') {
+        $posts = fetchPosts($page, $db, true);
+    } else {
+        $_GET['order_by'] = 'new';
+    }
 }
 
 if (userLoggedIn()) {
@@ -21,8 +35,12 @@ if (userLoggedIn()) {
 <main>
     <section>
         <h1>crack news</h1>
+        <h2>order by</h2>
+        <a href="index.php?order_by=top">upvotes</a>
+        <a href="index.php?order_by=new">new</a>
+        <br>
         <?php if (userLoggedIn()) : ?>
-            <button><a href="submit.php">submit post</a></a></button>
+            <button><a href="submit.php">submit post</a></button>
         <?php endif; ?>
     </section>
     <section>
@@ -45,8 +63,8 @@ if (userLoggedIn()) {
             </article>
         <?php endforeach; ?>
     </section>
-    <a href="index.php?page=<?= $page - 1 ?>">previous page</a>
-    <a href="index.php?page=<?= $page + 1 ?>">next page</a>
+    <a href="index.php?page=<?= $page - 1 ?>&order_by=<?= $order ?>">previous page</a>
+    <a href="index.php?page=<?= $page + 1 ?>&order_by=<?= $order ?>">next page</a>
     <?php if (isset($_SESSION['message'])) : ?>
         <p><?= $_SESSION['message'] ?></p>
         <?php unset($_SESSION['message']); ?>
