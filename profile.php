@@ -4,17 +4,21 @@ require __DIR__ . '/views/header.php';
 
 if (!isset($_SESSION['user'])) {
     header("location: /");
+} else {
+    fetchUserData($_SESSION['user'], $db);
+    $userPosts = fetchUserPosts($_SESSION['user']['id'], $db);
 }
 
-fetchUserData($_SESSION['user'], $db);
-
-// print_r($_SESSION['user']);
+if (isset($_GET['edit-post'])) {
+    (int)$postId = filter_var($_GET['edit-post'], FILTER_SANITIZE_NUMBER_INT);
+    $post = fetchPost($postId, $db);
+}
 
 ?>
 <main>
     <section>
         <?php if (!isset($_GET["edit-profile"])) : ?>
-            <h1>profile page</h1>
+            <h1>profile</h1>
             <?php if (!isset($_SESSION['user']['image_url'])) : ?>
                 <img src="/assets/images/no-image.png" alt="no profile picture selected">
             <?php else : ?>
@@ -24,6 +28,14 @@ fetchUserData($_SESSION['user'], $db);
             <p><?= $_SESSION['user']['bio'] ?></p>
             <a href="/profile.php?edit-profile=profile"><button>edit profile</button></a>
             <a href="/app/users/logout.php"><button>logout</button></a>
+            <h2>posts</h2>
+            <?php if (isset($userPosts)) : ?>
+                <ul>
+                    <?php foreach ($userPosts as $userPost) : ?>
+                        <li><a href="/profile.php?edit-post=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         <?php elseif ($_GET['edit-profile'] === "profile") : ?>
             <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
                 <label for="profile_picture">profile picture</label>
@@ -65,6 +77,9 @@ fetchUserData($_SESSION['user'], $db);
                 <input type="password" name="password" id="password" required>
                 <button type="submit">submit</button>
             </form>
+        <?php endif; ?>
+        <?php if (isset($_GET['edit-post'])) : ?>
+            <h2><?= $post['url'] ?></h2>
         <?php endif; ?>
         <?php if (isset($_SESSION['message'])) : ?>
             <p><?= $_SESSION['message'] ?></p>

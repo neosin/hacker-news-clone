@@ -9,20 +9,18 @@ if (isset($_GET['page'])) {
     $page = 0;
     $posts = fetchPosts($page, $db);
 }
-
-
 ?>
 
 <main>
     <section>
         <h1>crack news</h1>
         <?php if (isset($_SESSION['user'])) : ?>
-            <button><a href="">submit post</a></a></button>
+            <button><a href="submit.php">submit post</a></a></button>
         <?php endif; ?>
     </section>
     <section>
         <?php foreach ($posts as $post) : ?>
-            <article id="post-<?= $post['id'] ?>">
+            <article>
                 <h2><?= $post['id'] ?></h2>
                 <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
                 <a href="<?= $post['url'] ?>">

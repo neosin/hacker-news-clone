@@ -44,3 +44,7 @@ textarea {
   resize: none;
   font-family: sans-serif;
 }
+
+.vote.up.active {
+  background-color: red;
+}

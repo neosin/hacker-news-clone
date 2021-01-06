@@ -48,11 +48,11 @@ function loginUser(array $user, object $db): bool
 
 // signup functions
 
-function emptyInput(array $user): bool
+function emptyInput(array $input): bool
 {
 
-    foreach ($user as $userProperty) {
-        if (empty($userProperty)) {
+    foreach ($input as $inputProperty) {
+        if (empty($inputProperty)) {
             return true;
         }
     }
@@ -220,7 +220,45 @@ function changePassword(int $id, string $newPassword, object $db): void
 
 // post functions
 
+function validUrl(string $url): bool
+{
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        return true;
+    }
+
+    return false;
+}
+
 // createPost
+function createPost(int $id, array $newPost, object $db): void
+{
+    $time = date('Y-m-d H:i:s');
+    $stmnt = $db->prepare("INSERT INTO posts (user_id, title, description, url, creation_time) VALUES (:user_id, :title, :description, :url, :creation_time)");
+    $stmnt->bindParam(":user_id", $id, PDO::PARAM_INT);
+    $stmnt->bindParam(":title", $newPost['title'], PDO::PARAM_STR);
+    $stmnt->bindParam(":description", $newPost['description'], PDO::PARAM_STR);
+    $stmnt->bindParam(":url", $newPost['url'], PDO::PARAM_STR);
+    $stmnt->bindParam("creation_time", $time, PDO::PARAM_STR);
+
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+function fetchUserPosts(int $id, object $db): array
+{
+    $stmnt = $db->prepare("SELECT * FROM posts WHERE user_id = :user_id");
+    $stmnt->bindParam("user_id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    return $stmnt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // deletePost
 
@@ -230,7 +268,7 @@ function changePassword(int $id, string $newPassword, object $db): void
 
 // deleteComment
 
-// fetchPost
+// print posts
 function fetchPost(int $postId, object $db): array
 {
     $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
@@ -244,7 +282,6 @@ function fetchPost(int $postId, object $db): array
     return $stmnt->fetch(PDO::FETCH_ASSOC);
 }
 
-// fetchPoster
 function fetchPoster(int $id, object $db): string
 {
     $stmnt = $db->prepare("SELECT user_name FROM users WHERE id = :id;");
@@ -260,11 +297,10 @@ function fetchPoster(int $id, object $db): string
     return $result['user_name'];
 }
 
-// fetchPosts
 function fetchPosts(int $page, object $db): array
 {
     $offset = 0;
-    $numberOfPosts = fetchNumberOfPosts($db);
+    $numberOfPosts = fetchTotalNumberOfPosts($db);
 
     for ($i = 0; $i < $page; $i++) {
         $offset += 10;
@@ -284,8 +320,7 @@ function fetchPosts(int $page, object $db): array
     return $stmnt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// fetchNumberOfPosts
-function fetchNumberOfPosts($db): int
+function fetchTotalNumberOfPosts($db): int
 {
     $stmnt = $db->query("SELECT COUNT(id) as 'number-of-posts' FROM posts");
     $stmnt->execute();

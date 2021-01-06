@@ -19,6 +19,7 @@ articles.forEach((article) => {
   const upvoteButton = article.querySelector(".vote, .up");
 
   upvoteButton.addEventListener("click", (e) => {
+    upvoteButton.classList.toggle("active");
     const postID = e.target.dataset.post;
     const data = new FormData();
     data.append("post_id", postID);
@@ -27,7 +28,7 @@ articles.forEach((article) => {
       body: data,
     };
 
-    fetch("/app/posts/test.php", options)
+    fetch("/app/posts/vote.php", options)
       .then((response) => response.json())
       .then((resp) => {
         console.log(resp);
