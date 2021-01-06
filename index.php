@@ -10,21 +10,33 @@ if (isset($_GET['page'])) {
     $posts = fetchPosts($page, $db);
 }
 
+if (userLoggedIn()) {
+    $user = $_SESSION['user'];
+} else {
+    $user = NULL;
+}
+
 ?>
 
 <main>
     <section>
         <h1>crack news</h1>
-        <?php if (isset($_SESSION['user'])) : ?>
+        <?php if (userLoggedIn()) : ?>
             <button><a href="submit.php">submit post</a></a></button>
         <?php endif; ?>
     </section>
     <section>
         <?php foreach ($posts as $post) : ?>
             <article>
-                <h2><?= $post['title'] ?></h2>
-                <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
-                <p><?= $post['upvotes'] ?></p>
+                <hr>
+                <?php if (userLoggedIn() && userUpvote($user['id'], $post['id'], $db)) : ?>
+                    <button class="vote up active" data-post="<?= $post['id'] ?>">upvote</button>
+                <?php elseif (userLoggedIn() && !userUpvote($user['id'], $post['id'], $db)) : ?>
+                    <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
+                <?php else : ?>
+                    <button><a href="login.php">upvote</a></button>
+                <?php endif; ?>
+                <p class="upvotes"><?= $post['upvotes'] ?></p>
                 <a href="<?= $post['url'] ?>">
                     <h2><?= $post['title'] ?></h2>
                 </a>

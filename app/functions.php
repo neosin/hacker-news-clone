@@ -2,6 +2,17 @@
 
 declare(strict_types=1);
 
+// general functions
+
+function userLoggedIn(): bool
+{
+    if (isset($_SESSION['user'])) {
+        return true;
+    }
+
+    return false;
+}
+
 // login functions
 
 function fetchUserData(array $user, object $db): void
@@ -380,8 +391,22 @@ function userUpvote(int $userId, int $postId, object $db): bool
 function toggleUpvote(int $userId, int $postId, object $db): void
 {
     if (userUpvote($userId, $postId, $db)) {
-        exit;
-    }
+        $stmnt = $db->prepare("DELETE FROM upvotes WHERE user_id = :user_id AND post_id = :post_id");
+        $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+        $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+        $stmnt->execute();
 
-    echo "Upvote time!";
+        if (!$stmnt) {
+            die(var_dump($db->errorInfo()));
+        }
+    } else {
+        $stmnt = $db->prepare("INSERT INTO upvotes (user_id, post_id) VALUES(:user_id, :post_id)");
+        $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+        $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+        $stmnt->execute();
+
+        if (!$stmnt) {
+            die(var_dump($db->errorInfo()));
+        }
+    }
 }
