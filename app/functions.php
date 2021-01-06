@@ -263,9 +263,7 @@ function fetchUserPosts(int $id, object $db): array
 // deletePost
 
 // addComment
-
 // editComment
-
 // deleteComment
 
 // print posts
@@ -317,7 +315,13 @@ function fetchPosts(int $page, object $db): array
         die(var_dump($db->errorInfo()));
     }
 
-    return $stmnt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+
+    for ($i = 0; $i < sizeof($result); $i++) {
+        $result[$i]['upvotes'] = fetchUpvotes((int)$result[$i]['id'], $db);
+    }
+
+    return $result;
 }
 
 function fetchTotalNumberOfPosts($db): int
@@ -332,4 +336,52 @@ function fetchTotalNumberOfPosts($db): int
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     return (int)$result['number-of-posts'];
+}
+
+// votes
+
+function fetchUpvotes(int $postId, object $db): int
+{
+    $stmnt = $db->prepare("SELECT COUNT(post_id) as 'upvotes' FROM upvotes WHERE post_id = :post_id;");
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    return (int)$result['upvotes'];
+}
+
+function userUpvote(int $userId, int $postId, object $db): bool
+{
+    $stmnt = $db->prepare("SELECT * FROM upvotes WHERE user_id = :user_id AND post_id = :post_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return false;
+    }
+
+    return true;
+}
+
+//modifyUpvote
+
+function toggleUpvote(int $userId, int $postId, object $db): void
+{
+    if (userUpvote($userId, $postId, $db)) {
+        exit;
+    }
+
+    echo "Upvote time!";
 }

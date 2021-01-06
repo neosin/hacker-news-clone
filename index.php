@@ -9,6 +9,7 @@ if (isset($_GET['page'])) {
     $page = 0;
     $posts = fetchPosts($page, $db);
 }
+
 ?>
 
 <main>
@@ -21,8 +22,9 @@ if (isset($_GET['page'])) {
     <section>
         <?php foreach ($posts as $post) : ?>
             <article>
-                <h2><?= $post['id'] ?></h2>
+                <h2><?= $post['title'] ?></h2>
                 <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
+                <p><?= $post['upvotes'] ?></p>
                 <a href="<?= $post['url'] ?>">
                     <h2><?= $post['title'] ?></h2>
                 </a>
