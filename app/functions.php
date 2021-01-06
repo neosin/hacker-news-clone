@@ -165,7 +165,6 @@ function editBio(int $id, string $bio, object $db): void
     }
 }
 
-// editEmail
 function editEmail(int $id, string $newEmail, object $db): void
 {
     $stmnt = $db->prepare("UPDATE users SET email = :email WHERE id = :id");
@@ -178,7 +177,6 @@ function editEmail(int $id, string $newEmail, object $db): void
     }
 }
 
-// editProfilePicture
 function editProfilePicture(int $id, string $imageURL, object $db): void
 {
     $imageURL = explode("/app", $imageURL);
@@ -214,7 +212,6 @@ function checkPassword(int $id, string $password, object $db): bool
     return true;
 }
 
-// changePassword
 function changePassword(int $id, string $newPassword, object $db): void
 {
     $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -240,7 +237,6 @@ function validUrl(string $url): bool
     return false;
 }
 
-// createPost
 function createPost(int $id, array $newPost, object $db): void
 {
     $time = date('Y-m-d H:i:s');
@@ -310,7 +306,6 @@ function editPostUrl(int $userId, int $postId, string $newUrl, object $db): void
     }
 }
 
-// deletePost
 function deletePost(int $userId, int $postId, object $db): void //bool?
 {
     $stmnt = $db->prepare("DELETE FROM posts WHERE id = :post_id AND user_id = :user_id");
@@ -403,26 +398,8 @@ function fetchPosts(int $page, object $db, bool $orderByUpvotes = false): array
 
     $result = $stmnt->fetchAll(PDO::FETCH_ASSOC);
 
-    // for ($i = 0; $i < sizeof($result); $i++) { //inner-join?
-    //     $result[$i]['upvotes'] = fetchUpvotes((int)$result[$i]['id'], $db);
-    // }
-
     return $result;
 }
-
-// function sortPostsByDate(array &$posts): void
-// {
-//     usort($posts, function ($dateOne, $dateTwo) {
-//         return $dateTwo['creation_time'] <=> $dateOne['creation_time'];
-//     });
-// }
-
-// function sortPostsByUpvotes(array &$posts): void
-// {
-//     usort($posts, function ($comparePost, $post) {
-//         return $post['upvotes'] <=> $comparePost['upvotes'];
-//     });
-// }
 
 function fetchTotalNumberOfPosts($db): int
 {
