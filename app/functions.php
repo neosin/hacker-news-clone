@@ -15,7 +15,7 @@ function userLoggedIn(): bool
 
 // login functions
 
-function fetchUserData(array $user, object $db): void
+function setUserData(array $user, object $db): void
 {
     $id = $user['id'];
     $stmnt = $db->prepare("SELECT id, user_name, email, bio, image_url FROM users WHERE id = :id");
@@ -43,7 +43,7 @@ function loginUser(array $user, object $db): bool
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
-        $_SESSION['message'] = "Not registred";
+        $_SESSION['messages'] = "Not registred";
         return false;
     }
 
@@ -52,7 +52,7 @@ function loginUser(array $user, object $db): bool
         $_SESSION['user'] = $result;
         return true;
     } else {
-        $_SESSION['message'] = "Wrong password";
+        $_SESSION['messages'] = "Wrong password";
         return false;
     }
 }
@@ -207,7 +207,7 @@ function checkPassword(int $id, string $password, object $db): bool
     $userPassword = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!password_verify($password, $userPassword['password'])) {
-        $_SESSION['message'] = "Incorrect password";
+        $_SESSION['messages'] = "Incorrect password";
         return false;
     }
 
@@ -271,7 +271,57 @@ function fetchUserPosts(int $id, object $db): array
     return $stmnt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function editPostTitle(int $userId, int $postId, string $newTitle, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE posts SET title = :title WHERE id = :post_id AND user_id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+    $stmnt->bindParam(":title", $newTitle, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+function editPostDescription(int $userId, int $postId, string $newDescription, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE posts SET description = :description WHERE id = :post_id AND user_id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+    $stmnt->bindParam(":description", $newDescription, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+function editPostUrl(int $userId, int $postId, string $newUrl, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE posts SET url = :url WHERE id = :post_id AND user_id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+    $stmnt->bindParam(":url", $newUrl, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
 // deletePost
+function deletePost(int $userId, int $postId, object $db): void //bool?
+{
+    $stmnt = $db->prepare("DELETE FROM posts WHERE id = :post_id AND user_id = :user_id");
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
 
 // addComment
 // editComment
@@ -328,11 +378,22 @@ function fetchPosts(int $page, object $db): array
 
     $result = $stmnt->fetchAll(PDO::FETCH_ASSOC);
 
-    for ($i = 0; $i < sizeof($result); $i++) {
+    for ($i = 0; $i < sizeof($result); $i++) { //inner-join?
         $result[$i]['upvotes'] = fetchUpvotes((int)$result[$i]['id'], $db);
     }
 
     return $result;
+}
+
+function sortPostsByDate(array &$posts): void
+{
+    usort($array, function ($dateOne, $dateTwo) {
+        return $dateTwo['creation_time'] <=> $dateOne['creation_time'];
+    });
+}
+
+function sortPostsByLikes(array &$posts): void
+{
 }
 
 function fetchTotalNumberOfPosts($db): int

@@ -1,6 +1,6 @@
 <?php
-if (isset($_SESSION['user'])) {
-    fetchUserData($_SESSION['user'], $db);
+if (userLoggedIn()) {
+    setUserData($_SESSION['user'], $db);
 }
 ?>
 

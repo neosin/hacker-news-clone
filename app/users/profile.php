@@ -18,15 +18,15 @@ if (isset($_SESSION['user'])) {
             case 'image/png':
                 break;
             default:
-                $_SESSION['message'] = "Unsupported format";
-                header("location: /../../profile.php?edit-profile=profile");
+                $_SESSION['messages'][] = "Unsupported format";
+                header("location: /../../edit.php?edit=profile");
                 exit;
                 break;
         }
 
         if ($_FILES['profile_picture']['size'] >= 2000000) {
-            $_SESSION['message'] = "File is to big, needs to be smaller than 2mb";
-            header("location: /../../profile.php?edit-profile=profile");
+            $_SESSION['messages'][] = "File is to big, needs to be smaller than 2mb";
+            header("location: /../../edit.php?edit=profile");
             exit;
         }
 
@@ -39,14 +39,14 @@ if (isset($_SESSION['user'])) {
         $user['new_user_name'] = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
 
         if (emptyInput($user)) {
-            $_SESSION['message'] = "Empty fields";
-            header("location: /../../profile.php?edit-profile=profile");
+            $_SESSION['messages'][] = "Empty fields";
+            header("location: /../../edit.php?edit=profile");
             exit;
         }
 
         if (userNameExists($user['new_user_name'], $db)) {
-            $_SESSION['message'] = "Username taken";
-            header("location: /../../profile.php?edit-profile=profile");
+            $_SESSION['messages'][] = "Username taken";
+            header("location: /../../edit.php?edit=profile");
             exit;
         }
 
@@ -63,48 +63,48 @@ if (isset($_SESSION['user'])) {
         $user['password'] = $_POST['password'];
 
         if (emptyInput($user)) {
-            $_SESSION['message'] = "Empty fields";
-            header("location: /../../profile.php?edit-profile=profile");
+            $_SESSION['messages'][] = "Empty fields";
+            header("location: /../../edit.php?edit=profile");
             exit;
         }
 
         if (!checkPassword($user['id'], $_POST['password'], $db)) {
-            header("location: /../../profile.php?edit-profile=email");
+            header("location: /../../edit.php?edit=email");
             exit;
         }
 
         if (!validEmail($user['new_email'])) {
-            $_SESSION['message'] = "Invalid email-adress";
-            header("location: /../../profile.php?edit-profile=email");
+            $_SESSION['messages'][] = "Invalid email-adress";
+            header("location: /../../edit.php?edit=email");
             exit;
         }
 
         if (userEmailExists($user['new_email'], $db)) {
-            $_SESSION['message'] = "Email-adress already registered";
-            header("location: /../../profile.php?edit-profile=email");
+            $_SESSION['messages'][] = "Email-adress already registered";
+            header("location: /../../edit.php?edit=email");
             exit;
         }
 
         editEmail($user['id'], $user['new_email'], $db);
-        $_SESSION['message'] = "Email changed to " . $user['new_email'];
-        header("location: /../../profile.php?edit-profile=email");
+        $_SESSION['messages'][] = "Email changed to " . $user['new_email'];
+        header("location: /../../edit.php?edit=email");
         exit;
     }
 
     if (isset($_POST['current_password'], $_POST['new_password'], $_POST['password_check'])) {
         if (!checkPassword($user['id'], $_POST['current_password'], $db)) {
-            header("location: /../../profile.php?edit-profile=password");
+            header("location: /../../edit.php?edit=password");
             exit;
         }
 
         if (!passwordMatch($_POST['new_password'], $_POST['password_check'])) {
-            header("location: /../../profile.php?edit-profile=password");
+            header("location: /../../edit.php?edit=password");
             exit;
         }
 
         changePassword($user['id'], $_POST['new_password'], $db);
-        $_SESSION['message'] = "Password changed!";
-        header("location: /../../profile.php?edit-profile=password");
+        $_SESSION['messages'][] = "Password changed!";
+        header("location: /../../edit.php?edit=password");
         exit;
     }
 
