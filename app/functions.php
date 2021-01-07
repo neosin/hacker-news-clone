@@ -365,7 +365,10 @@ function fetchPosts(int $page, object $db, bool $orderByUpvotes = false): array
     }
 
     if ($orderByUpvotes) {
-        $sql = "SELECT p.*, COALESCE(v.upvote_count, 0) AS upvotes
+        $sql = "SELECT 
+        p.*,
+        COALESCE(v.upvote_count, 0) AS upvotes,
+        COALESCE(c.comment_count, 0) AS comments
         FROM posts p
         LEFT OUTER JOIN (
             SELECT post_id, COUNT(post_id) AS upvote_count
@@ -373,10 +376,19 @@ function fetchPosts(int $page, object $db, bool $orderByUpvotes = false): array
             GROUP BY post_id
         ) v
         ON p.id = v.post_id
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS comment_count
+            FROM COMMENTS
+            GROUP BY post_id
+        ) c
+        ON p.id = c.post_id
         ORDER BY upvotes DESC, p.creation_time DESC
         LIMIT 10 OFFSET :offset;";
     } else {
-        $sql = "SELECT p.*, COALESCE(v.upvote_count, 0) AS upvotes
+        $sql = "SELECT 
+        p.*,
+        COALESCE(v.upvote_count, 0) AS upvotes,
+        COALESCE(c.comment_count, 0) AS comments
         FROM posts p
         LEFT OUTER JOIN (
             SELECT post_id, COUNT(post_id) AS upvote_count
@@ -384,6 +396,12 @@ function fetchPosts(int $page, object $db, bool $orderByUpvotes = false): array
             GROUP BY post_id
         ) v
         ON p.id = v.post_id
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS comment_count
+            FROM COMMENTS
+            GROUP BY post_id
+        ) c
+        ON p.id = c.post_id
         ORDER BY p.creation_time DESC
         LIMIT 10 OFFSET :offset;";
     }
