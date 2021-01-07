@@ -26,7 +26,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) { //current title/desc/url?
     if (isset($_POST['url'])) {
         $newUrl = filter_var($_POST['url'], FILTER_SANITIZE_URL);
         if (!validUrl($newUrl)) {
-            $newUrl = NULL;
+            $newUrl = null;
             $messages[] = "Invalid URL";
         } else {
             editPostUrl($userId, $postId, $newUrl, $db);

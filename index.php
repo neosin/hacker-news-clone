@@ -27,7 +27,7 @@ if (isset($_GET['order_by'])) {
 if (userLoggedIn()) {
     $user = $_SESSION['user'];
 } else {
-    $user = NULL;
+    $user = null;
 }
 
 ?>

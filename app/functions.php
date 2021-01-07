@@ -378,7 +378,7 @@ function fetchComments(int $postId, object $db): ?array
     $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
 
     if (!$results) {
-        return NULL;
+        return null;
     }
 
     return $results;
@@ -398,7 +398,7 @@ function fetchComment(int $commentId, int $userId, object $db): ?array
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
-        return NULL;
+        return null;
     }
 
     return $result;
@@ -418,7 +418,7 @@ function fetchPost(int $postId, object $db): ?array
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
-        return NULL;
+        return null;
     }
 
     return $result;
