@@ -1,18 +1,3 @@
-// const data = new FormData();
-// data.append("post_id", 1);
-// data.append("last-name", "lindstedt");
-
-// const options = {
-//   method: "POST",
-//   body: data,
-// };
-
-// fetch("/app/posts/test.php", options)
-//   .then((response) => response.json())
-//   .then((data) => {
-//     console.log(data);
-//   });
-
 const articles = document.querySelectorAll("article");
 
 articles.forEach((article) => {
@@ -32,9 +17,8 @@ articles.forEach((article) => {
 
             fetch("/app/posts/vote.php", options)
                 .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                    numberOfUpvotes.textContent = data;
+                .then((upvotes) => {
+                    numberOfUpvotes.textContent = upvotes;
                 });
         });
     }
