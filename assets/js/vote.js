@@ -1,4 +1,4 @@
-const articles = document.querySelectorAll("article");
+const articles = document.querySelectorAll("article.post");
 
 articles.forEach((article) => {
     const upvoteButton = article.querySelector("button");

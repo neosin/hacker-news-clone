@@ -8,7 +8,6 @@ if (isset($_GET['page'])) {
     $page = 0;
 }
 
-
 if (!isset($_GET['order_by'])) {
     $_GET['order_by'] = 'new';
 }
@@ -23,36 +22,25 @@ if (isset($_GET['order_by'])) {
         $_GET['order_by'] = 'new';
     }
 }
-
-if (userLoggedIn()) {
-    $user = $_SESSION['user'];
-} else {
-    $user = null;
-}
-
 ?>
 
 <main>
     <section>
         <h1>crack news</h1>
-        <h2>order by</h2>
-        <a href="index.php?order_by=top">upvotes</a>
-        <a href="index.php?order_by=new">new</a>
-        <br>
         <?php if (userLoggedIn()) : ?>
             <button><a href="submit.php">submit post</a></button>
         <?php endif; ?>
     </section>
     <section>
         <?php foreach ($posts as $post) : ?>
-            <article>
-                <hr>
-                <?php if (userLoggedIn() && userUpvote($user['id'], $post['id'], $db)) : ?>
+            <hr>
+            <article class="post">
+                <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                     <button class="vote up active" data-post="<?= $post['id'] ?>">upvote</button>
-                <?php elseif (userLoggedIn() && !userUpvote($user['id'], $post['id'], $db)) : ?>
+                <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                     <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
                 <?php else : ?>
-                    <button><a href="login.php">upvote</a></button>
+                    <button><a href="login.php">login to upvote</a></button>
                 <?php endif; ?>
                 <p class="upvotes"><?= $post['upvotes'] ?></p>
                 <a href="<?= $post['url'] ?>">
@@ -62,12 +50,19 @@ if (userLoggedIn()) {
                 <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
                 <p><?= $post['comments'] ?> comments</p>
             </article>
+            <hr>
         <?php endforeach; ?>
     </section>
-    <a href="index.php?page=<?= $page - 1 ?>&order_by=<?= $order ?>">previous page</a>
-    <a href="index.php?page=<?= $page + 1 ?>&order_by=<?= $order ?>">next page</a>
-    <?php if (isset($_SESSION['message'])) : ?>
-        <p><?= $_SESSION['message'] ?></p>
+    <?php if ($page > 0) : ?>
+        <a href="index.php?page=<?= $page - 1 ?>&order_by=<?= $order ?>">previous page</a>
+    <?php endif; ?>
+    <?php if (sizeof($posts) === 10) : ?>
+        <a href="index.php?page=<?= $page + 1 ?>&order_by=<?= $order ?>">next page</a>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p><?= $message ?></p>
+        <?php endforeach; ?>
         <?php unset($_SESSION['message']); ?>
     <?php endif; ?>
 </main>
