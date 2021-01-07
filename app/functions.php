@@ -13,6 +13,8 @@ function userLoggedIn(): bool
     return false;
 }
 
+//addMessages ?
+
 // login functions
 
 function setUserData(array $user, object $db): void
@@ -319,11 +321,91 @@ function deletePost(int $userId, int $postId, object $db): void //bool?
 }
 
 // addComment
-// editComment
-// deleteComment
+function addComment(int $userId, int $postId, string $comment, object $db): void
+{
+    $time = date('Y-m-d H:i:s');
+    $stmnt = $db->prepare("INSERT INTO comments (user_id, post_id, comment, creation_time) 
+    VALUES(:user_id, :post_id, :comment, :creation_time)");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->bindParam(":comment", $comment, PDO::PARAM_STR);
+    $stmnt->bindParam(":creation_time", $time, PDO::PARAM_STR);
+    $stmnt->execute();
 
-// print posts
-function fetchPost(int $postId, object $db): array
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+// editComment
+function editComment(int $userId, int $commentId, string $updatedComment, object $db): void
+{
+    $stmnt = $db->prepare("UPDATE comments SET comment = :updated_comment WHERE id = :comment_id AND user_id = :user_id");
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":updated_comment", $updatedComment, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+// deleteComment
+function deleteComment(int $userId, int $commentId, object $db): void //bool?
+{
+    $stmnt = $db->prepare("DELETE FROM comments WHERE id = :comment_id AND user_id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+// print comment functions
+function fetchComments(int $postId, object $db): ?array
+{
+    $stmnt = $db->prepare("SELECT * FROM comments WHERE post_id = :post_id");
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$results) {
+        return NULL;
+    }
+
+    return $results;
+}
+
+function fetchComment(int $commentId, int $userId, object $db): ?array
+{
+    $stmnt = $db->prepare("SELECT * FROM comments WHERE id = :comment_id AND user_id = :user_id");
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return NULL;
+    }
+
+    return $result;
+}
+
+// print posts functions
+function fetchPost(int $postId, object $db): ?array
 {
     $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
     $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
@@ -333,7 +415,13 @@ function fetchPost(int $postId, object $db): array
         die(var_dump($db->errorInfo()));
     }
 
-    return $stmnt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return NULL;
+    }
+
+    return $result;
 }
 
 function fetchPoster(int $id, object $db): string

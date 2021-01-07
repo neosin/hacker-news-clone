@@ -13,7 +13,7 @@ body {
 
 a {
   text-decoration: none;
-  color: black;
+  color: coral;
 }
 
 nav ul {
@@ -47,4 +47,11 @@ textarea {
 
 .vote.up.active {
   background-color: red;
+}
+
+.comment {
+  margin: 8px;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 8px;
 }

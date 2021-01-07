@@ -37,7 +37,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) { //current title/desc/url?
     if (isset($_POST['delete'])) {
         deletePost($userId, $postId, $db);
         $_SESSION['messages'] = "Post deleted";
-        unset($postId);
+        unset($postId); //?
     }
 
     if (isset($messages)) { //implement this everywhere

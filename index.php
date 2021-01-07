@@ -58,6 +58,7 @@ if (userLoggedIn()) {
                 <a href="<?= $post['url'] ?>">
                     <h2><?= $post['title'] ?></h2>
                 </a>
+                <a href="/view-post.php?post_id=<?= $post['id'] ?>">view</a>
                 <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
                 <p><?= $post['comments'] ?> comments</p>
             </article>

@@ -12,6 +12,10 @@ if (!userLoggedIn()) {
             $postId = (int)filter_var($_GET['post_id'], FILTER_SANITIZE_NUMBER_INT);
             $post = fetchPost($postId, $db);
         }
+        if (isset($_GET['comment_id'])) {
+            $commentId = (int)filter_var($_GET['comment_id'], FILTER_SANITIZE_NUMBER_INT);
+            $comment = fetchComment($commentId, (int)$_SESSION['user']['id'], $db);
+        }
     }
 }
 ?>
@@ -73,6 +77,20 @@ if (!userLoggedIn()) {
             <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
             <input type="hidden" name="delete" id="delete" value="true">
             <button type="submit" class="delete">delete post</button>
+        </form>
+    <?php elseif ($_GET['edit'] === 'comment') : ?>
+        <form action="/app/posts/comment.php" method="post">
+            <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
+            <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
+            <label for="edited_comment">edit comment</label>
+            <textarea id="edited_comment" name="edited_comment" rows="4" required><?= $comment['comment'] ?></textarea>
+            <button type="submit">submit</button>
+        </form>
+        <form action="/app/posts/comment.php" method="post">
+            <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
+            <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
+            <input type="hidden" name="delete" id="delete" value="true">
+            <button class="delete">delete comment</button>
         </form>
     <?php endif; ?>
     <?php if (isset($_SESSION['messages'])) : ?>
