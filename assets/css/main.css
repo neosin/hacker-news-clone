@@ -16,6 +16,10 @@ a {
   color: coral;
 }
 
+nav {
+  margin: 0px calc(var(--min-margin) * 4);
+}
+
 nav ul {
   display: flex;
   justify-content: flex-start;
@@ -24,6 +28,10 @@ nav ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+nav ul li:first-child {
+  margin-left: 0;
 }
 
 nav ul li {
@@ -54,4 +62,31 @@ textarea {
   padding: 8px;
   border: 1px solid black;
   border-radius: 8px;
+}
+
+article.post {
+  display: flex;
+  align-items: flex-start;
+  border: 1px solid black;
+  border-radius: 4px;
+  margin: calc(var(--min-margin) * 3) 0px;
+}
+
+div.votes {
+  margin: var(--min-margin);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div.content {
+  margin: var(--min-margin);
+  display: flex;
+  flex-direction: column;
+}
+
+div.content * {
+  margin: calc(var(--min-margin) / 2) 0px;
+  margin-top: 0;
 }

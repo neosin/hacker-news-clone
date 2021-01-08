@@ -26,33 +26,36 @@ if (isset($_GET['order_by'])) {
 ?>
 
 <main>
-    <section>
+    <header>
         <h1>news</h1>
         <?php if (userLoggedIn()) : ?>
             <a class="button" href="submit.php">submit post</a>
         <?php endif; ?>
-    </section>
+    </header>
     <section>
         <?php foreach ($posts as $post) : ?>
-            <hr>
             <article class="post">
-                <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
-                    <button class="vote up active" data-post="<?= $post['id'] ?>">upvote</button>
-                <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
-                    <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
-                <?php else : ?>
-                    <!-- control data in js? to escape the button-problem? -->
-                    <button><a href="login.php">login to upvote</a></button>
-                <?php endif; ?>
-                <p class="upvotes"><?= $post['upvotes'] ?></p>
-                <a href="<?= $post['url'] ?>">
-                    <h2><?= $post['title'] ?></h2>
-                </a>
-                <a href="/view-post.php?post_id=<?= $post['id'] ?>">view</a>
-                <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
-                <p><?= $post['comments'] ?> comments</p>
+                <div class="votes">
+                    <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
+                        <button class="vote up active" data-post="<?= $post['id'] ?>">upvote</button>
+                    <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
+                        <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
+                    <?php else : ?>
+                        <!-- control data in js? to escape the button-problem? -->
+                        <button><a href="login.php">login to upvote</a></button>
+                    <?php endif; ?>
+                    <p class="upvotes"><?= $post['upvotes'] ?></p>
+                </div>
+                <div class="content">
+                    <a href="<?= $post['url'] ?>">
+                        <h2><?= $post['title'] ?></h2>
+                    </a>
+                    <a href="/view-post.php?post_id=<?= $post['id'] ?>">
+                        <p><?= $post['comments'] ?> comments</p>
+                    </a>
+                    <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
+                </div>
             </article>
-            <hr>
         <?php endforeach; ?>
     </section>
     <?php if ($page > 0) : ?>
