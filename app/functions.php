@@ -327,15 +327,33 @@ function editPostUrl(int $userId, int $postId, string $newUrl, PDO $db): void
     }
 }
 
-function deletePost(int $userId, int $postId, PDO $db): void //also delete comments and upvotes!
+function deletePost(int $userId, int $postId, PDO $db): void
 {
-    $stmnt = $db->prepare("DELETE FROM posts WHERE id = :post_id AND user_id = :user_id");
-    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
-    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
-    $stmnt->execute();
+    $sql = [
+        "DELETE FROM posts WHERE id = :post_id AND user_id = :user_id;",
+        "DELETE FROM upvotes WHERE post_id = :post_id;",
+        "DELETE FROM comments WHERE post_id = :post_id;",
+    ];
 
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
+    for ($i = 0; $i < sizeof($sql); $i++) {
+        if ($i === 0) {
+            $stmnt = $db->prepare($sql[$i]);
+            $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+            $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+            $stmnt->execute();
+
+            if (!$stmnt) {
+                die(var_dump($db->errorInfo));
+            }
+        } else {
+            $stmnt = $db->prepare($sql[$i]);
+            $stmnt->bindParam(":post_id", $postId, PDO::PARAM_STR);
+            $stmnt->execute();
+
+            if (!$stmnt) {
+                die(var_dump($db->errorInfo));
+            }
+        }
     }
 }
 
