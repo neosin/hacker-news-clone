@@ -2,7 +2,7 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-if (!isset($_SESSION['user'])) {
+if (!userLoggedIn()) {
     header("location: /");
 } else {
     $userPosts = fetchUserPosts($_SESSION['user']['id'], $db);
@@ -29,9 +29,11 @@ if (!isset($_SESSION['user'])) {
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-        <?php if (isset($_SESSION['message'])) : ?>
-            <p><?= $_SESSION['message'] ?></p>
-            <?php unset($_SESSION['message']); ?>
+        <?php if (isset($_SESSION['messages'])) : ?>
+            <?php foreach ($_SESSION['messages'] as $message) : ?>
+                <p><?= $message ?></p>
+            <?php endforeach; ?>
+            <?php unset($_SESSION['messages']) ?>
         <?php endif; ?>
     </section>
 </main>

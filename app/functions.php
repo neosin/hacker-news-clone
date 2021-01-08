@@ -13,11 +13,22 @@ function userLoggedIn(): bool
     return false;
 }
 
-//addMessages ?
+function sumMessages(array $messages): void
+{
+    $_SESSION['messages'] = $messages;
+}
+
+function checkUserId(int $checkId, int $userId): bool
+{
+    if ($userId !== $checkId) {
+        return false;
+    }
+    return true;
+}
 
 // login functions
 
-function setUserData(array $user, object $db): void
+function setUserData(array $user, object $db): void //return array?
 {
     $id = $user['id'];
     $stmnt = $db->prepare("SELECT id, user_name, email, bio, image_url FROM users WHERE id = :id");
@@ -33,6 +44,7 @@ function setUserData(array $user, object $db): void
 
 function loginUser(array $user, object $db): bool
 {
+    $messages = [];
     $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
     $stmnt = $db->prepare("SELECT * FROM users WHERE email = :email");
     $stmnt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -45,7 +57,9 @@ function loginUser(array $user, object $db): bool
     $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
     if (!$result) {
-        $_SESSION['messages'] = "Not registred";
+        // $_SESSION['messages'] = "Not registred";
+        $messages[] = "Not registered";
+        sumMessages($messages);
         return false;
     }
 
@@ -54,7 +68,9 @@ function loginUser(array $user, object $db): bool
         $_SESSION['user'] = $result;
         return true;
     } else {
-        $_SESSION['messages'] = "Wrong password";
+        // $_SESSION['messages'] = "Wrong password";
+        $messages[] = "Wrong password";
+        sumMessages($messages);
         return false;
     }
 }

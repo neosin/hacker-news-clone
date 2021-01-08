@@ -26,7 +26,7 @@ if (isset($_GET['order_by'])) {
 
 <main>
     <section>
-        <h1>crack news</h1>
+        <h1>news</h1>
         <?php if (userLoggedIn()) : ?>
             <button><a href="submit.php">submit post</a></button>
         <?php endif; ?>
@@ -63,7 +63,7 @@ if (isset($_GET['order_by'])) {
         <?php foreach ($_SESSION['messages'] as $message) : ?>
             <p><?= $message ?></p>
         <?php endforeach; ?>
-        <?php unset($_SESSION['message']); ?>
+        <?php unset($_SESSION['messages']); ?>
     <?php endif; ?>
 </main>
 

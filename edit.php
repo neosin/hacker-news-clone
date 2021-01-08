@@ -2,6 +2,8 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
+$messages = [];
+
 if (!userLoggedIn()) {
     header('location: /');
 } else {
@@ -11,10 +13,20 @@ if (!userLoggedIn()) {
         if (isset($_GET['post_id'])) {
             $postId = (int)filter_var($_GET['post_id'], FILTER_SANITIZE_NUMBER_INT);
             $post = fetchPost($postId, $db);
+            if (!checkUserId((int)$post['user_id'], (int)$_SESSION['user']['id'])) {
+                $messages[] = "Post not submited by you";
+                sumMessages($messages);
+                header('location: /profile.php');
+            }
         }
         if (isset($_GET['comment_id'])) {
             $commentId = (int)filter_var($_GET['comment_id'], FILTER_SANITIZE_NUMBER_INT);
             $comment = fetchComment($commentId, (int)$_SESSION['user']['id'], $db);
+            if (!checkUserId((int)$comment['id'], (int)$_SESSION['user']['id'])) {
+                $messages[] = "Comment not submited by you";
+                sumMessages($messages);
+                header('location: /profile.php');
+            }
         }
     }
 }
