@@ -7,9 +7,9 @@ if (isset($_GET['post_id'])) {
     $post = fetchPost($postId, $db);
     $comments = fetchComments($postId, $db);
 } else {
-    header('location: /index.php');
+    header('location: /');
+    exit;
 }
-
 ?>
 
 <main>
@@ -40,15 +40,13 @@ if (isset($_GET['post_id'])) {
                     <form action="/app/posts/comment.php" method="post">
                         <label for="comment">comment</label>
                         <input type="hidden" id="post_id" name="post_id" value="<?= $post['id'] ?>">
-                        <textarea id="comment" name="comment" rows="4"></textarea>
+                        <textarea id="comment" name="comment" rows="4" required></textarea>
                         <button type="submit">submit</button>
                     </form>
                 <?php else : ?>
                     <a href="/login.php">login to comment</a>
                 <?php endif; ?>
             </article>
-        <?php else : ?>
-            <p>The link seems to be dead</p>
         <?php endif; ?>
     </section>
     <?php if (isset($_SESSION['messages'])) : ?>

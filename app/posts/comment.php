@@ -16,25 +16,35 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
 
     if (isset($_POST['comment'])) {
         $comment = filter_var($_POST['comment'], FILTER_SANITIZE_STRING);
+        if (empty($comment)) {
+            addMessage('Comment can not be empty');
+            header("location: /../../view-post.php?post_id=$postId");
+            exit;
+        }
         addComment($userId, $postId, $comment, $db);
     }
 
     if (isset($_POST['edited_comment'])) {
         $editedComment = filter_var($_POST['edited_comment'], FILTER_SANITIZE_STRING);
+        if (empty($editedComment)) {
+            addMessage('Comment can not be empty');
+            header("location: /../../edit.php?edit=comment&comment_id=$commentId");
+            exit;
+        }
         editComment($userId, $commentId, $editedComment, $db);
-        $_SESSION['messages'][] = "Comment edited";
-        header("location: /../../edit.php?edit=comment&comment_id=$commentId");
+        addMessage('Comment edited');
+        header("location: /../../view-post.php?post_id=$postId");
         exit;
     }
 
     if (isset($_POST['delete'])) {
         deleteComment($userId, $commentId, $db);
-        $_SESSION['messages'][] = "Comment deleted";
+        addMessage('Comment deleted');
     }
 }
 
 if (isset($postId)) {
     header("location: /../../view-post.php?post_id=$postId");
-} else {
+} else { // ?
     header("location: /../../profile.php");
 }

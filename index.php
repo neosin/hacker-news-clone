@@ -19,7 +19,8 @@ if (isset($_GET['order_by'])) {
     } elseif ($order === 'top') {
         $posts = fetchPosts($page, $db, true);
     } else {
-        $_GET['order_by'] = 'new';
+        header('location: /');
+        exit;
     }
 }
 ?>
@@ -28,7 +29,7 @@ if (isset($_GET['order_by'])) {
     <section>
         <h1>news</h1>
         <?php if (userLoggedIn()) : ?>
-            <button><a href="submit.php">submit post</a></button>
+            <a class="button" href="submit.php">submit post</a>
         <?php endif; ?>
     </section>
     <section>
@@ -40,6 +41,7 @@ if (isset($_GET['order_by'])) {
                 <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                     <button class="vote up" data-post="<?= $post['id'] ?>">upvote</button>
                 <?php else : ?>
+                    <!-- control data in js? to escape the button-problem? -->
                     <button><a href="login.php">login to upvote</a></button>
                 <?php endif; ?>
                 <p class="upvotes"><?= $post['upvotes'] ?></p>

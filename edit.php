@@ -6,6 +6,7 @@ $messages = [];
 
 if (!userLoggedIn()) {
     header('location: /');
+    exit;
 } else {
     if (!isset($_GET['edit'])) {
         $_GET['edit'] = 'profile';
@@ -14,18 +15,18 @@ if (!userLoggedIn()) {
             $postId = (int)filter_var($_GET['post_id'], FILTER_SANITIZE_NUMBER_INT);
             $post = fetchPost($postId, $db);
             if (!checkUserId((int)$post['user_id'], (int)$_SESSION['user']['id'])) {
-                $messages[] = "Post not submited by you";
-                sumMessages($messages);
+                addMessage('Post not submitted by you');
                 header('location: /profile.php');
+                exit;
             }
         }
         if (isset($_GET['comment_id'])) {
             $commentId = (int)filter_var($_GET['comment_id'], FILTER_SANITIZE_NUMBER_INT);
             $comment = fetchComment($commentId, (int)$_SESSION['user']['id'], $db);
-            if (!checkUserId((int)$comment['id'], (int)$_SESSION['user']['id'])) {
-                $messages[] = "Comment not submited by you";
-                sumMessages($messages);
+            if (!checkUserId((int)$comment['user_id'], (int)$_SESSION['user']['id'])) {
+                addMessage('Comment not submited by you');
                 header('location: /profile.php');
+                exit;
             }
         }
     }

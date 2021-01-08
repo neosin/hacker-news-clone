@@ -4,8 +4,10 @@ require __DIR__ . '/views/header.php';
 
 if (!userLoggedIn()) {
     header("location: /");
+    exit;
 } else {
     $userPosts = fetchUserPosts($_SESSION['user']['id'], $db);
+    $userComments = fetchUserComments($_SESSION['user']['id'], $db);
 }
 
 ?>
@@ -21,13 +23,35 @@ if (!userLoggedIn()) {
         <p><?= $_SESSION['user']['bio'] ?></p>
         <a href="/edit.php?edit=profile"><button>edit profile</button></a>
         <a href="/app/users/logout.php"><button>logout</button></a>
-        <h2>posts</h2>
         <?php if (isset($userPosts)) : ?>
+            <h2>posts</h2>
             <ul>
                 <?php foreach ($userPosts as $userPost) : ?>
-                    <li><a href="/edit.php?edit=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a></li>
+                    <li>
+                        <a href="/view-post.php?post_id=<?= $userPost['id'] ?>">view post</a>
+                        <a href="/edit.php?edit=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
+                    </li>
                 <?php endforeach; ?>
             </ul>
+        <?php else : ?>
+            <h2>no posts</h2>
+            <a class="button" href="submit.php">submit post</a>
+        <?php endif; ?>
+        <?php if (isset($userComments)) : ?>
+            <h2>comments</h2>
+            <?php foreach ($userComments as $userComment) : ?>
+                <div class="comment">
+                    <p>on
+                        <a href="/view-post.php?post_id=<?= $userComment['post_id'] ?>">
+                            <?= fetchPostTitle((int)$userComment['post_id'], $db) ?>
+                        </a>
+                    </p>
+                    <p><?= $userComment['comment'] ?></p>
+                    <a href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">edit comment</a>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <h2>no comments</h2>
         <?php endif; ?>
         <?php if (isset($_SESSION['messages'])) : ?>
             <?php foreach ($_SESSION['messages'] as $message) : ?>

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 require __DIR__ . '/../autoload.php';
 
+$messages = [];
+
 if (isset($_SESSION['user'])) {
     $user = [
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
 
-    if (isset($_FILES['profile_picture'])) { // Why does this trigger when no file is uploaded?
+    if (isset($_FILES['profile_picture'])) {
         switch ($_FILES['profile_picture']['type']) {
             case 'image/gif':
                 break;
@@ -17,15 +19,20 @@ if (isset($_SESSION['user'])) {
                 break;
             case 'image/png':
                 break;
+            case '':
+                addMessage('You need to select a file to upload of the format gif, png or jpeg');
+                header("location: /../../edit.php?edit=profile");
+                exit;
+                break;
             default:
-                $_SESSION['messages'][] = "Unsupported format";
+                addMessage('Unsupported format, choose gif, png or jpeg');
                 header("location: /../../edit.php?edit=profile");
                 exit;
                 break;
         }
 
         if ($_FILES['profile_picture']['size'] >= 2000000) {
-            $_SESSION['messages'][] = "File is to big, needs to be smaller than 2mb";
+            addMessage('File is to big, needs to be smaller than 2mb');
             header("location: /../../edit.php?edit=profile");
             exit;
         }
@@ -39,13 +46,13 @@ if (isset($_SESSION['user'])) {
         $user['new_user_name'] = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
 
         if (emptyInput($user)) {
-            $_SESSION['messages'][] = "Empty fields";
+            addMessage('Empty fields');
             header("location: /../../edit.php?edit=profile");
             exit;
         }
 
         if (userNameExists($user['new_user_name'], $db)) {
-            $_SESSION['messages'][] = "Username taken";
+            addMessage('Username taken');
             header("location: /../../edit.php?edit=profile");
             exit;
         }
@@ -53,7 +60,7 @@ if (isset($_SESSION['user'])) {
         editUserName($user['id'], $user['new_user_name'], $db);
     }
 
-    if (isset($_POST['bio'])) {
+    if (isset($_POST['bio']) && $_POST['bio'] !== $_SESSION['user']['bio']) {
         $user['bio'] = filter_var($_POST['bio'], FILTER_SANITIZE_STRING);
         editBio($user['id'], $user['bio'], $db);
     }
@@ -63,51 +70,53 @@ if (isset($_SESSION['user'])) {
         $user['password'] = $_POST['password'];
 
         if (emptyInput($user)) {
-            $_SESSION['messages'][] = "Empty fields";
+            addMessage('Empty fields');
             header("location: /../../edit.php?edit=profile");
             exit;
         }
 
         if (!checkPassword($user['id'], $_POST['password'], $db)) {
+            addMessage('Incorrect password');
             header("location: /../../edit.php?edit=email");
             exit;
         }
 
         if (!validEmail($user['new_email'])) {
-            $_SESSION['messages'][] = "Invalid email-adress";
+            addMessage('Invalid email-adress');
             header("location: /../../edit.php?edit=email");
             exit;
         }
 
         if (userEmailExists($user['new_email'], $db)) {
-            $_SESSION['messages'][] = "Email-adress already registered";
+            addMessage('Email-adress already registered');
             header("location: /../../edit.php?edit=email");
             exit;
         }
 
         editEmail($user['id'], $user['new_email'], $db);
-        $_SESSION['messages'][] = "Email changed to " . $user['new_email'];
+        addMessage('Email changed to ' . $user['new_email']);
         header("location: /../../edit.php?edit=email");
         exit;
     }
 
     if (isset($_POST['current_password'], $_POST['new_password'], $_POST['password_check'])) {
         if (!checkPassword($user['id'], $_POST['current_password'], $db)) {
+            addMessage('Incorrect password');
             header("location: /../../edit.php?edit=password");
             exit;
         }
 
         if (!passwordMatch($_POST['new_password'], $_POST['password_check'])) {
+            addMessage('Unmatching passwords');
             header("location: /../../edit.php?edit=password");
             exit;
         }
 
         changePassword($user['id'], $_POST['new_password'], $db);
-        $_SESSION['messages'][] = "Password changed!";
+        addMessage('Password changed!');
         header("location: /../../edit.php?edit=password");
         exit;
     }
-
     unset($user);
 }
 
