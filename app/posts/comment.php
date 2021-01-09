@@ -44,7 +44,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
 }
 
 if (isset($postId)) {
-    header("location: /../../view-post.php?post_id=$postId");
+    header("location: /../../view.php?view=post&post_id=$postId");
 } else { // ?
     header("location: /../../profile.php");
 }

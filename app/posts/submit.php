@@ -32,5 +32,4 @@ if (userLoggedIn()) {
     }
 }
 
-// header('location: /../../submit.php');  
 header("location: /../../view.php?view=post&post_id=$postId");

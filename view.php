@@ -53,7 +53,9 @@ if (isset($_GET['view'])) {
                         <div class="comment">
                             <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
                             <p><?= $comment['comment'] ?></p>
-                            <?php if (userLoggedIn() && $_SESSION['user']['id'] === $comment['user_id']) : ?>
+                            <?php if (userLoggedIn()) : ?>
+                                <button class="reply" data-comment=<?= $comment['id'] ?>>reply</button>
+                            <?php elseif (userLoggedIn() && $_SESSION['user']['id'] === $comment['user_id']) : ?>
                                 <a href="/edit.php?edit=comment&comment_id=<?= $comment['id'] ?>">edit comment</a>
                             <?php endif; ?>
                         </div>
@@ -118,7 +120,7 @@ if (isset($_GET['view'])) {
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
 </main>
-
+<script src="/assets/js/comment.js"></script>
 <?php
 require __DIR__ . '/views/footer.php';
 ?>
