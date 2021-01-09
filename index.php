@@ -50,10 +50,14 @@ if (isset($_GET['order_by'])) {
                     <a href="<?= $post['url'] ?>">
                         <h2><?= $post['title'] ?></h2>
                     </a>
-                    <a href="/view-post.php?post_id=<?= $post['id'] ?>">
-                        <p><?= $post['comments'] ?> comments</p>
+                    <a href="/view.php?view=post&post_id=<?= $post['id'] ?>">
+                        <?= $post['comments'] ?> comments
                     </a>
-                    <p>posted by <?= fetchPoster($post['user_id'], $db) ?></p>
+                    <p> posted by
+                        <a href="/view.php?view=profile&user_id= <?= $post['user_id'] ?>">
+                            <?= fetchPoster($post['user_id'], $db) ?>
+                        </a>
+                    </p>
                 </div>
             </article>
         <?php endforeach; ?>

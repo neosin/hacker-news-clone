@@ -72,6 +72,25 @@ function loginUser(array $user, PDO $db): bool
     }
 }
 
+function fetchUser(int $userId, PDO $db): ?array
+{
+    $stmnt = $db->prepare("SELECT id, user_name, bio, image_url FROM users WHERE id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return null;
+    }
+
+    return $result;
+}
+
 // signup functions
 
 function emptyInput(array $input): bool
@@ -269,10 +288,10 @@ function createPost(int $id, array $newPost, PDO $db): void
     }
 }
 
-function fetchUserPosts(int $id, PDO $db): ?array
+function fetchUserPosts(int $userId, PDO $db): ?array
 {
     $stmnt = $db->prepare("SELECT * FROM posts WHERE user_id = :user_id");
-    $stmnt->bindParam("user_id", $id, PDO::PARAM_INT);
+    $stmnt->bindParam("user_id", $userId, PDO::PARAM_INT);
     $stmnt->execute();
 
     if (!$stmnt) {

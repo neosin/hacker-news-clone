@@ -28,7 +28,7 @@ if (!userLoggedIn()) {
             <ul>
                 <?php foreach ($userPosts as $userPost) : ?>
                     <li>
-                        <a href="/view-post.php?post_id=<?= $userPost['id'] ?>">view post</a>
+                        <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>">view post</a>
                         <a href="/edit.php?edit=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
                     </li>
                 <?php endforeach; ?>
@@ -42,7 +42,7 @@ if (!userLoggedIn()) {
             <?php foreach ($userComments as $userComment) : ?>
                 <div class="comment">
                     <p>on
-                        <a href="/view-post.php?post_id=<?= $userComment['post_id'] ?>">
+                        <a href="/view.php?view=post&post_id=<?= $userComment['post_id'] ?>">
                             <?= fetchPostTitle((int)$userComment['post_id'], $db) ?>
                         </a>
                     </p>
