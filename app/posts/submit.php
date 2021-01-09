@@ -28,7 +28,9 @@ if (userLoggedIn()) {
 
         createPost($userId, $newPost, $db);
         addMessage('Post submitted');
+        $postId = fetchLatestPostId($db);
     }
 }
 
-header('location: /../../submit.php');
+// header('location: /../../submit.php');  
+header("location: /../../view.php?view=post&post_id=$postId");

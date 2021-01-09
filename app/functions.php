@@ -72,25 +72,6 @@ function loginUser(array $user, PDO $db): bool
     }
 }
 
-function fetchUser(int $userId, PDO $db): ?array
-{
-    $stmnt = $db->prepare("SELECT id, user_name, bio, image_url FROM users WHERE id = :user_id");
-    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
-    $stmnt->execute();
-
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
-    }
-
-    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$result) {
-        return null;
-    }
-
-    return $result;
-}
-
 // signup functions
 
 function emptyInput(array $input): bool
@@ -175,7 +156,7 @@ function createUser(array $newUser, PDO $db): void
 
 // validUserName ?
 
-// edit profile functions
+// profile functions
 
 function editUserName(int $id, string $userName, PDO $db): void
 {
@@ -259,6 +240,25 @@ function changePassword(int $id, string $newPassword, PDO $db): void
     if (!$stmnt) {
         die(var_dump($db->errorInfo()));
     }
+}
+
+function fetchUser(int $userId, PDO $db): ?array
+{
+    $stmnt = $db->prepare("SELECT id, user_name, bio, image_url FROM users WHERE id = :user_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return null;
+    }
+
+    return $result;
 }
 
 // post functions
@@ -374,6 +374,14 @@ function deletePost(int $userId, int $postId, PDO $db): void
             }
         }
     }
+}
+
+function fetchLatestPostId(PDO $db): int
+{
+    $stmnt = $db->query("SELECT id FROM posts ORDER BY creation_time DESC LIMIT 1;");
+    $stmnt->execute();
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+    return (int)$result['id'];
 }
 
 // addComment

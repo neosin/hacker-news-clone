@@ -110,12 +110,12 @@ if (isset($_GET['view'])) {
                 <h2>no comments</h2>
             <?php endif; ?>
         </section>
-        <?php if (isset($_SESSION['messages'])) : ?>
-            <?php foreach ($_SESSION['messages'] as $message) : ?>
-                <p><?= $message ?></p>
-            <?php endforeach; ?>
-            <?php unset($_SESSION['messages']) ?>
-        <?php endif; ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
 </main>
 
