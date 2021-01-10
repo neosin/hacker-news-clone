@@ -50,12 +50,19 @@ if (isset($_GET['view'])) {
             <section class="comments">
                 <?php if (isset($postComments)) : ?>
                     <?php foreach ($postComments as $comment) : ?>
-                        <div class="comment">
+                        <div class="comment" id="<?= $comment['id'] ?>">
                             <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
                             <p><?= $comment['comment'] ?></p>
+                            <?php if (isset($comment['reply'])) : ?>
+                                <div class="reply" style="background-color: coral;">
+                                    <p>reply to: </p>
+                                    <p><?= fetchComment($comment['reply'], $db)['comment'] ?></p>
+                                </div>
+                            <?php endif; ?>
                             <?php if (userLoggedIn()) : ?>
-                                <button class="reply" data-comment=<?= $comment['id'] ?>>reply</button>
-                            <?php elseif (userLoggedIn() && $_SESSION['user']['id'] === $comment['user_id']) : ?>
+                                <a href="/edit.php?edit=reply&comment_id=<?= $comment['id'] ?>">reply</a>
+                            <?php endif; ?>
+                            <?php if (userLoggedIn() && $_SESSION['user']['id'] === $comment['user_id']) : ?>
                                 <a href="/edit.php?edit=comment&comment_id=<?= $comment['id'] ?>">edit comment</a>
                             <?php endif; ?>
                         </div>

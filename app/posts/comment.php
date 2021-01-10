@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../autoload.php';
 
-$messages = [];
+// die(var_dump($_POST));
 
 if (userLoggedIn() && isset($_POST['post_id'])) {
     $userId = (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT);
@@ -33,7 +33,15 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
         }
         editComment($userId, $commentId, $editedComment, $db);
         addMessage('Comment edited');
-        header("location: /../../view-post.php?post_id=$postId");
+        header("location: /../../view.php?view=post&post_id=$postId");
+        exit;
+    }
+
+    if (isset($_POST['reply'])) {
+        $replyTo = $commentId;
+        $reply = filter_var($_POST['reply'], FILTER_SANITIZE_STRING);
+        addReply($userId, $postId, $replyTo, $reply, $db);
+        header("location: /../../view.php?view=post&post_id=$postId");
         exit;
     }
 

@@ -401,6 +401,23 @@ function addComment(int $userId, int $postId, string $comment, PDO $db): void
     }
 }
 
+function addReply(int $userId, int $postId, int $commentId, string $comment, PDO $db): void
+{
+    $time = date('Y-m-d H:i:s');
+    $stmnt = $db->prepare("INSERT INTO comments (post_id, user_id, comment, reply, creation_time)
+    VALUES(:post_id, :user_id, :comment, :reply, :creation_time)");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->bindParam(":comment", $comment, PDO::PARAM_STR);
+    $stmnt->bindParam(":reply", $commentId, PDO::PARAM_INT);
+    $stmnt->bindParam(":creation_time", $time, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
 // editComment
 function editComment(int $userId, int $commentId, string $updatedComment, PDO $db): void
 {
@@ -431,7 +448,26 @@ function deleteComment(int $userId, int $commentId, PDO $db): void //bool?
 // print comment functions
 function fetchComments(int $postId, PDO $db): ?array
 {
-    $stmnt = $db->prepare("SELECT * FROM comments WHERE post_id = :post_id ORDER BY creation_time");
+    $stmnt = $db->prepare("SELECT * FROM comments WHERE post_id = :post_id AND reply IS NULL ORDER BY creation_time");
+    $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$results) {
+        return null;
+    }
+
+    return $results;
+}
+
+function fetchReplies($postId, $db): ?array
+{
+    $stmnt = $db->prepare("SELECT * FROM comments WHERE post_id = :post_id AND reply IS NOT NULL ORDER BY creation_time");
     $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
     $stmnt->execute();
 
@@ -467,11 +503,30 @@ function fetchUserComments(int $userId, PDO $db): ?array
     return $results;
 }
 
-function fetchComment(int $commentId, int $userId, PDO $db): ?array
+function fetchCommentForEdit(int $commentId, int $userId, PDO $db): ?array
 {
     $stmnt = $db->prepare("SELECT * FROM comments WHERE id = :comment_id AND user_id = :user_id");
     $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
     $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return null;
+    }
+
+    return $result;
+}
+
+function fetchComment(int $commentId, PDO $db): ?array
+{
+    $stmnt = $db->prepare("SELECT * FROM comments WHERE id = :comment_id;");
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
     $stmnt->execute();
 
     if (!$stmnt) {
