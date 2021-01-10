@@ -433,15 +433,30 @@ function editComment(int $userId, int $commentId, string $updatedComment, PDO $d
 }
 
 // deleteComment
-function deleteComment(int $userId, int $commentId, PDO $db): void //bool?
+function deleteComment(int $userId, int $commentId, PDO $db): void //fix until i figure out how to keep replies
 {
-    $stmnt = $db->prepare("DELETE FROM comments WHERE id = :comment_id AND user_id = :user_id");
-    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
-    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_STR);
-    $stmnt->execute();
+    $sql = [
+        "DELETE FROM comments WHERE id = :comment_id AND user_id = :user_id;",
+        "DELETE FROM comments WHERE reply = :comment_id;",
+    ];
 
-    if (!$stmnt) {
-        die(var_dump($db->errorInfo()));
+    for ($i = 0; $i < sizeof($sql); $i++) {
+        if ($i === 0) {
+            $stmnt = $db->prepare($sql[$i]);
+            $stmnt->bindParam(":user_id", $userId, PDO::PARAM_STR);
+            $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_STR);
+            $stmnt->execute();
+
+            if (!$stmnt) {
+                die(var_dump($db->errorInfo()));
+            }
+        }
+        $stmnt = $db->prepare($sql[$i]);
+        $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_STR);
+        $stmnt->execute();
+        if (!$stmnt) {
+            die(var_dump($db->errorInfo()));
+        }
     }
 }
 
