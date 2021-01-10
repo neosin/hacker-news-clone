@@ -27,6 +27,14 @@ function checkUserId(int $checkId, int $userId): bool
     return true;
 }
 
+function getAge(string $birth): int
+{
+    $today = new DateTime();
+    $birth = new DateTime($birth);
+    $interval = $today->diff($birth);
+    return $interval->days;
+}
+
 // login functions
 
 function setUserData(array $user, PDO $db): void //return array?

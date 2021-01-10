@@ -8,8 +8,12 @@ if (isset($_GET['view'])) {
         if (isset($_GET['post_id'])) {
             $postId = (int)filter_var($_GET['post_id'], FILTER_SANITIZE_NUMBER_INT);
             $post = fetchPost($postId, $db);
-            $postComments = fetchComments($postId, $db);
-            $commentReplies = fetchReplies($postId, $db);
+            if (!isset($post)) {
+                addMessage('Link seems to be dead!');
+            } else {
+                $postComments = fetchComments($postId, $db);
+                $commentReplies = fetchReplies($postId, $db);
+            }
         }
     } elseif ($view === 'profile') {
         if (isset($_GET['user_id'])) {
@@ -19,8 +23,12 @@ if (isset($_GET['view'])) {
                 exit;
             }
             $profile = fetchUser($userId, $db);
-            $userPosts = fetchUserPosts($userId, $db);
-            $userComments = fetchUserComments($userId, $db);
+            if (!isset($profile)) {
+                addMessage('No user like this seems to exist!');
+            } else {
+                $userPosts = fetchUserPosts($userId, $db);
+                $userComments = fetchUserComments($userId, $db);
+            }
         }
     } else {
         addMessage('Incorrect url');
@@ -42,7 +50,13 @@ if (isset($_GET['view'])) {
                 <h1><?= $post['title'] ?></h1>
             </a>
             <p><?= $post['description'] ?></p>
-            <p>by <?= fetchPoster((int)$post['user_id'], $db) ?></p>
+            <p>
+                by
+                <a href="/view.php?view=profile&user_id=<?= $post['user_id'] ?>">
+                    <?= fetchPoster((int)$post['user_id'], $db) ?>
+                </a>
+            </p>
+            <p><?= $post['creation_time'] ?></p>
             <?php if (userLoggedIn() && $post['user_id'] === $_SESSION['user']['id']) : ?>
                 <a href="/edit.php?edit=post&post_id=<?= $post['id'] ?>">
                     edit post
@@ -104,7 +118,7 @@ if (isset($_GET['view'])) {
                 <ul>
                     <?php foreach ($userPosts as $userPost) : ?>
                         <li>
-                            <a href="/view-post.php?post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
+                            <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -116,7 +130,7 @@ if (isset($_GET['view'])) {
                 <?php foreach ($userComments as $userComment) : ?>
                     <div class="comment">
                         <p>on
-                            <a href="/view-post.php?post_id=<?= $userComment['post_id'] ?>">
+                            <a href="/view.php?view=post&post_id=<?= $userComment['post_id'] ?>">
                                 <?= fetchPostTitle((int)$userComment['post_id'], $db) ?>
                             </a>
                         </p>
@@ -135,7 +149,6 @@ if (isset($_GET['view'])) {
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
 </main>
-<script src="/assets/js/comment.js"></script>
 <?php
 require __DIR__ . '/views/footer.php';
 ?>

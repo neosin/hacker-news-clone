@@ -54,9 +54,10 @@ if (isset($_GET['order_by'])) {
                         <?= $post['comments'] ?> comments
                     </a>
                     <p> posted by
-                        <a href="/view.php?view=profile&user_id= <?= $post['user_id'] ?>">
+                        <a href="/view.php?view=profile&user_id=<?= $post['user_id'] ?>">
                             <?= fetchPoster($post['user_id'], $db) ?>
                         </a>
+                        <?= getAge($post['creation_time']) ?> days ago
                     </p>
                 </div>
             </article>
