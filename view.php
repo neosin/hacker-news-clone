@@ -9,6 +9,7 @@ if (isset($_GET['view'])) {
             $postId = (int)filter_var($_GET['post_id'], FILTER_SANITIZE_NUMBER_INT);
             $post = fetchPost($postId, $db);
             $postComments = fetchComments($postId, $db);
+            $commentReplies = fetchReplies($postId, $db);
         }
     } elseif ($view === 'profile') {
         if (isset($_GET['user_id'])) {
@@ -49,21 +50,28 @@ if (isset($_GET['view'])) {
             <?php endif; ?>
             <section class="comments">
                 <?php if (isset($postComments)) : ?>
-                    <?php foreach ($postComments as $comment) : ?>
-                        <div class="comment" id="<?= $comment['id'] ?>">
-                            <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
-                            <p><?= $comment['comment'] ?></p>
-                            <?php if (isset($comment['reply'])) : ?>
-                                <div class="reply" style="background-color: coral;">
-                                    <p>reply to: </p>
-                                    <p><?= fetchComment($comment['reply'], $db)['comment'] ?></p>
-                                </div>
+                    <?php foreach ($postComments as $postComment) : ?>
+                        <div class="comment">
+                            <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?></a>
+                            <p><?= $postComment['comment'] ?></p>
+                            <?php if (isset($commentReplies)) : ?>
+                                <?php foreach ($commentReplies as $commentReply) : ?>
+                                    <?php if ($commentReply['reply'] === $postComment['id']) : ?>
+                                        <div class="comment reply">
+                                            <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?></a>
+                                            <p><?= $commentReply['comment'] ?></p>
+                                            <?php if (userLoggedIn() && $_SESSION['user']['id'] === $commentReply['user_id']) : ?>
+                                                <a href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             <?php endif; ?>
                             <?php if (userLoggedIn()) : ?>
-                                <a href="/edit.php?edit=reply&comment_id=<?= $comment['id'] ?>">reply</a>
+                                <a href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
                             <?php endif; ?>
-                            <?php if (userLoggedIn() && $_SESSION['user']['id'] === $comment['user_id']) : ?>
-                                <a href="/edit.php?edit=comment&comment_id=<?= $comment['id'] ?>">edit comment</a>
+                            <?php if (userLoggedIn() && $_SESSION['user']['id'] === $postComment['user_id']) : ?>
+                                <a href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
