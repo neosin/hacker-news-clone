@@ -23,9 +23,7 @@ if (userLoggedIn()) {
         <input type="password" name="password" id="password" required>
         <button type="submit">Submit</button>
     </form>
-    <div class="button">
-        <a href="signup.php">register account</a>
-    </div>
+    <a class="button" href="signup.php">register account</a>
 </section>
 
 <?php

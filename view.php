@@ -45,6 +45,12 @@ if (isset($_GET['view'])) {
 }
 ?>
 <main>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p class="error"><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']) ?>
+    <?php endif; ?>
     <?php if (isset($post)) : ?>
         <article class="post grid">
             <div class="half">
@@ -72,9 +78,7 @@ if (isset($_GET['view'])) {
                 </p>
                 <p><?= $post['creation_time'] ?></p>
                 <?php if (userLoggedIn() && $post['user_id'] === $_SESSION['user']['id']) : ?>
-                    <div class="button">
-                        <a href="/edit.php?edit=post&post_id=<?= $post['id'] ?>">edit post</a>
-                    </div>
+                    <a class="button" href="/edit.php?edit=post&post_id=<?= $post['id'] ?>">edit post</a>
                 <?php endif; ?>
             </div>
             <section class="comments full">
@@ -90,23 +94,17 @@ if (isset($_GET['view'])) {
                                             <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?>:</a>
                                             <p><?= $commentReply['comment'] ?></p>
                                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $commentReply['user_id']) : ?>
-                                                <div class="button">
-                                                    <a href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
-                                                </div>
+                                                <a class="button" href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             <?php if (userLoggedIn()) : ?>
-                                <div class="button">
-                                    <a href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
-                                </div>
+                                <a class="button" href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
                             <?php endif; ?>
                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $postComment['user_id']) : ?>
-                                <div class="button">
-                                    <a href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
-                                </div>
+                                <a class="button" href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -122,9 +120,7 @@ if (isset($_GET['view'])) {
                     <button type="submit">submit</button>
                 </form>
             <?php else : ?>
-                <div class="button">
-                    <a href="/login.php">login to comment</a>
-                </div>
+                <a class="button" href="/login.php">login to comment</a>
             <?php endif; ?>
         </article>
     <?php elseif (isset($profile)) : ?>
@@ -206,12 +202,6 @@ if (isset($_GET['view'])) {
         <?php else : ?>
             <?php addMessage('No results') ?>
         <?php endif; ?>
-    <?php endif; ?>
-    <?php if (isset($_SESSION['messages'])) : ?>
-        <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p class="error"><?= $message ?></p>
-        <?php endforeach; ?>
-        <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
 </main>
 <?php

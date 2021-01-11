@@ -12,6 +12,12 @@ if (!userLoggedIn()) {
 
 ?>
 <main>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p class="error"><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']) ?>
+    <?php endif; ?>
     <section class="profile">
         <h1>profile</h1>
         <?php if (!isset($_SESSION['user']['image_url'])) : ?>
@@ -21,12 +27,8 @@ if (!userLoggedIn()) {
         <?php endif; ?>
         <p><?= $_SESSION['user']['user_name'] ?></p>
         <p><?= $_SESSION['user']['bio'] ?></p>
-        <a href="/edit.php?edit=profile">
-            <button>edit profile</button>
-        </a>
-        <a href="/app/users/logout.php">
-            <button>logout</button>
-        </a>
+        <a class="button" href="/edit.php?edit=profile">edit profile</a>
+        <a class="button" href="/app/users/logout.php">logout</a>
         <?php if (isset($userPosts)) : ?>
             <h2>posts</h2>
             <ul class="user-posts">
@@ -38,7 +40,7 @@ if (!userLoggedIn()) {
             </ul>
         <?php else : ?>
             <h2>no posts</h2>
-            <a href="submit.php"><button>submit post</button></a>
+            <a class="button" href="submit.php">submit post</a>
         <?php endif; ?>
         <?php if (isset($userComments)) : ?>
             <h2>comments</h2>
@@ -50,19 +52,11 @@ if (!userLoggedIn()) {
                         </a>
                     </p>
                     <p><?= $userComment['comment'] ?></p>
-                    <a href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">
-                        <button>edit comment</button>
-                    </a>
+                    <a class="button" href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">edit comment</a>
                 </div>
             <?php endforeach; ?>
         <?php else : ?>
             <h2>no comments</h2>
-        <?php endif; ?>
-        <?php if (isset($_SESSION['messages'])) : ?>
-            <?php foreach ($_SESSION['messages'] as $message) : ?>
-                <p><?= $message ?></p>
-            <?php endforeach; ?>
-            <?php unset($_SESSION['messages']) ?>
         <?php endif; ?>
     </section>
 </main>

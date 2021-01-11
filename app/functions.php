@@ -84,6 +84,20 @@ function redirectToPage(string $url = null): void // don't use until fixed.
     }
 }
 
+function pageActive(string $url): string
+{
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $activeUrl = $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+    } else {
+        $activeUrl = $_SERVER['PHP_SELF'];
+    }
+    if ($activeUrl === $url) {
+        return "active";
+    } else {
+        return "";
+    }
+}
+
 // login functions
 
 function setUserData(array $user, PDO $db): void //return array?

@@ -26,25 +26,22 @@ if (isset($_GET['order_by'])) {
 
 ?>
 <header>
-    <h1>news</h1>
     <?php if (userLoggedIn()) : ?>
-        <div class="button">
-            <a href="submit.php">submit post</a>
-        </div>
+        <a class="button" href="submit.php">submit post</a>
     <?php endif; ?>
 </header>
-<?php if (isset($_SESSION['messages'])) : ?>
-    <?php foreach ($_SESSION['messages'] as $message) : ?>
-        <p class="error"><?= $message ?></p>
-    <?php endforeach; ?>
-    <?php unset($_SESSION['messages']); ?>
-<?php endif; ?>
 <main>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p class="error"><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']); ?>
+    <?php endif; ?>
     <section class="search-field">
         <form action="/view.php" method="get">
             <label for="query">search</label>
             <input type="hidden" name="view" id="view" value="search">
-            <input type="text" name="query" id="query">
+            <input type="text" name="query" id="query" required>
             <button type="submit">search news</button>
         </form>
     </section>
@@ -57,7 +54,6 @@ if (isset($_GET['order_by'])) {
                     <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                         <button class="vote" data-post="<?= $post['id'] ?>">▲</button>
                     <?php else : ?>
-                        <!-- control data in js? to escape the button-problem? -->
                         <button class="vote">▲</button>
                     <?php endif; ?>
                     <p class="upvotes"><?= $post['upvotes'] ?></p>
@@ -80,14 +76,10 @@ if (isset($_GET['order_by'])) {
         <?php endforeach; ?>
     </section>
     <?php if ($page > 0) : ?>
-        <div class="button">
-            <a href="index.php?page=<?= $page - 1 ?>&order_by=<?= $order ?>">previous page</a>
-        </div>
+        <a class="button" href="index.php?page=<?= $page - 1 ?>&order_by=<?= $order ?>">previous page</a>
     <?php endif; ?>
     <?php if (sizeof($posts) === 10) : ?>
-        <div class="button">
-            <a href="index.php?page=<?= $page + 1 ?>&order_by=<?= $order ?>">next page</a>
-        </div>
+        <a class="button" href="index.php?page=<?= $page + 1 ?>&order_by=<?= $order ?>">next page</a>
     <?php endif; ?>
 </main>
 

@@ -5,8 +5,8 @@ require __DIR__ . '/views/header.php';
 $messages = [];
 
 if (!userLoggedIn()) {
-    // header('location: /');
-    redirectToPage("/login.php");
+    header('location: /');
+    // redirectToPage("/login.php");
     exit;
 } else {
     if (!isset($_GET['edit'])) {
@@ -40,6 +40,12 @@ if (!userLoggedIn()) {
 ?>
 
 <main>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']); ?>
+    <?php endif; ?>
     <?php if ($_GET['edit'] === 'profile') : ?>
         <section class="profile">
             <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
@@ -125,12 +131,6 @@ if (!userLoggedIn()) {
             <textarea id="reply" name="reply" rows="4" required></textarea>
             <button type="submit">submit</button>
         </form>
-    <?php endif; ?>
-    <?php if (isset($_SESSION['messages'])) : ?>
-        <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p><?= $message ?></p>
-        <?php endforeach; ?>
-        <?php unset($_SESSION['messages']); ?>
     <?php endif; ?>
 </main>
 
