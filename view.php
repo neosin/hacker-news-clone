@@ -2,8 +2,6 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-addReturnPage();
-
 if (isset($_GET['view'])) {
     $view = filter_var($_GET['view'], FILTER_SANITIZE_STRING);
     if ($view === 'post') {
@@ -184,7 +182,7 @@ if (isset($_GET['view'])) {
                 </article>
             <?php endforeach; ?>
         <?php else : ?>
-            <?php addmessage('No results') ?>
+            <?php addMessage('No results') ?>
         <?php endif; ?>
     <?php endif; ?>
     <?php if (isset($_SESSION['messages'])) : ?>

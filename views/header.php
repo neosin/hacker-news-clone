@@ -15,5 +15,4 @@ if (userLoggedIn()) {
 </head>
 
 <body>
-
     <?php require __DIR__ . '/navigation.php' ?>

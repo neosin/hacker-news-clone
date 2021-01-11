@@ -67,6 +67,23 @@ function addReturnPage(): void
     }
 }
 
+function redirectToPage(string $url = null): void
+{
+    if (!$url) {
+        if (isset($_SESSION['return'])) {
+            // header($_SESSION['return']);
+            echo $_SESSION['return'];
+            unset($_SESSION['return']);
+        } else {
+            // header("Location: /");
+            echo "Location: /";
+        }
+    } else {
+        // header("Location: $url");
+        echo "Location: $url";
+    }
+}
+
 // login functions
 
 function setUserData(array $user, PDO $db): void //return array?

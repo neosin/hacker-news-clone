@@ -18,9 +18,10 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
         $comment = filter_var($_POST['comment'], FILTER_SANITIZE_STRING);
         if (empty($comment)) {
             addMessage('Comment can not be empty');
-            header("location: /../../view-post.php?post_id=$postId");
+            header("location: /../../view.php?view=post&post_id=$postId");
             exit;
         }
+        $comment = trim($comment);
         addComment($userId, $postId, $comment, $db);
     }
 
@@ -31,6 +32,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
             header("location: /../../edit.php?edit=comment&comment_id=$commentId");
             exit;
         }
+        $editedComment = trim($editedComment);
         editComment($userId, $commentId, $editedComment, $db);
         addMessage('Comment edited');
         header("location: /../../view.php?view=post&post_id=$postId");
@@ -40,6 +42,12 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
     if (isset($_POST['reply'])) {
         $replyTo = $commentId;
         $reply = filter_var($_POST['reply'], FILTER_SANITIZE_STRING);
+        if (empty($reply)) {
+            addMessage('Reply can not be empty');
+            header("location: /../../view.php?view=post&post_id=$postId");
+            exit;
+        }
+        $reply = trim($reply);
         addReply($userId, $postId, $replyTo, $reply, $db);
         header("location: /../../view.php?view=post&post_id=$postId");
         exit;

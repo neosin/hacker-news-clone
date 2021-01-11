@@ -2,8 +2,6 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-addReturnPage();
-
 if (isset($_GET['page'])) {
     $page = (int)filter_var($_GET['page'], FILTER_SANITIZE_NUMBER_INT);
 } else {

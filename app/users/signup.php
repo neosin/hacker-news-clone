@@ -45,7 +45,8 @@ if (isset($_POST['username'], $_POST['signup-email'], $_POST['signup-password'],
     $newUser['password_hash'] = password_hash($newUser['password'], PASSWORD_DEFAULT);
     createUser($newUser, $db);
     loginUser($newUser, $db);
+    addMessage('Welcome ' . $newUser['user_name'] . "!");
     unset($newUser);
 }
 
-header("location: /../../index.php");
+header("Location: /");

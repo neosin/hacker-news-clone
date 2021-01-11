@@ -5,7 +5,8 @@ require __DIR__ . '/views/header.php';
 $messages = [];
 
 if (!userLoggedIn()) {
-    header('location: /');
+    // header('location: /');
+    redirectToPage("/login.php");
     exit;
 } else {
     if (!isset($_GET['edit'])) {
@@ -17,6 +18,7 @@ if (!userLoggedIn()) {
             if (!checkUserId((int)$post['user_id'], (int)$_SESSION['user']['id'])) {
                 addMessage('Post not submitted by you');
                 header('location: /profile.php');
+                // redirectToPage("/profile.php");
                 exit;
             }
         }
@@ -26,6 +28,7 @@ if (!userLoggedIn()) {
             if (!checkUserId((int)$comment['user_id'], (int)$_SESSION['user']['id'])) {
                 addMessage('Comment not submited by you');
                 header('location: /profile.php');
+                // redirectToPage("/profile.php");
                 exit;
             }
         } elseif ($_GET['edit'] === 'reply' && isset($_GET['comment_id'])) {

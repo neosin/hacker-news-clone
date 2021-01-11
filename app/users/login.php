@@ -12,15 +12,17 @@ if (isset($_POST['email'], $_POST['password'])) {
 
     if (!loginUser($user, $db)) { //break out like the other pages?
         header("location: /../../login.php");
+        // redirectToPage("/../../login.php");
         exit;
     }
 
     unset($user);
 }
 
-if (isset($_SESSION['return'])) {
-    header($_SESSION['return']);
-    unset($_SESSION['return']);
-} else {
-    header("Location: /");
-}
+header("Location: /");
+// if (isset($_SESSION['return'])) {
+//     header($_SESSION['return']);
+// } else {
+//     header("Location: /");
+// }
+// redirectToPage();

@@ -6,7 +6,7 @@ require __DIR__ . '/../autoload.php';
 
 $messages = [];
 
-if (isset($_SESSION['user'])) {
+if (userLoggedIn()) {
     $user = [
         'id' => (int)filter_var($_SESSION['user']['id'], FILTER_SANITIZE_NUMBER_INT),
     ];
