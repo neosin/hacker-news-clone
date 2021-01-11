@@ -18,4 +18,9 @@ if (isset($_POST['email'], $_POST['password'])) {
     unset($user);
 }
 
-header("Location: /");
+if (isset($_SESSION['return'])) {
+    header($_SESSION['return']);
+    unset($_SESSION['return']);
+} else {
+    header("Location: /");
+}

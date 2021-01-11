@@ -28,8 +28,7 @@ if (!userLoggedIn()) {
             <ul>
                 <?php foreach ($userPosts as $userPost) : ?>
                     <li>
-                        <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>">view post</a>
-                        <a href="/edit.php?edit=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
+                        <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
                     </li>
                 <?php endforeach; ?>
             </ul>

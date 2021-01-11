@@ -2,6 +2,8 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
+$_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+
 if (isset($_GET['view'])) {
     $view = filter_var($_GET['view'], FILTER_SANITIZE_STRING);
     if ($view === 'post') {
@@ -40,9 +42,7 @@ if (isset($_GET['view'])) {
     header('location: /');
     exit;
 }
-
 ?>
-
 <main>
     <?php if (isset($post)) : ?>
         <article>

@@ -2,6 +2,8 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
+$return = '?return_to=' . $_SERVER['PHP_SELF'];
+
 if (isset($_GET['page'])) {
     $page = (int)filter_var($_GET['page'], FILTER_SANITIZE_NUMBER_INT);
 } else {
@@ -23,6 +25,10 @@ if (isset($_GET['order_by'])) {
         exit;
     }
 }
+
+print_r($_SERVER);
+// echo $return;
+
 ?>
 
 <main>
