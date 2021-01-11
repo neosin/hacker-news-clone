@@ -35,6 +35,14 @@ if (isset($_GET['order_by'])) {
             <a class="button" href="submit.php">submit post</a>
         <?php endif; ?>
     </header>
+    <section class="search-field">
+        <form action="/view.php" method="get">
+            <label for="search">search</label>
+            <input type="hidden" name="view" id="view" value="search">
+            <input type="text" name="query" id="query">
+            <button type="submit">search</button>
+        </form>
+    </section>
     <section>
         <?php foreach ($posts as $post) : ?>
             <article class="post">

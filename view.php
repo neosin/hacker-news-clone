@@ -32,6 +32,9 @@ if (isset($_GET['view'])) {
                 $userComments = fetchUserComments($userId, $db);
             }
         }
+    } elseif ($view === 'search') {
+        $query = filter_var($_GET['query'], FILTER_SANITIZE_STRING);
+        $searchResults = searchPosts($query, $db);
     } else {
         addMessage('Incorrect url');
         header('location: /');
@@ -141,6 +144,48 @@ if (isset($_GET['view'])) {
                 <h2>no comments</h2>
             <?php endif; ?>
         </section>
+    <?php elseif (isset($query)) : ?>
+        <section class="search-field">
+            <form action="/view.php" method="get">
+                <label for="search">search</label>
+                <input type="hidden" name="view" id="view" value="search">
+                <input type="text" name="query" id="query" value=<?= $query ?>>
+                <button type="submit">search</button>
+            </form>
+        </section>
+        <?php if (isset($searchResults)) : ?>
+            <?php foreach ($searchResults as $searchResult) : ?>
+                <article class="post">
+                    <div class="votes">
+                        <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $searchResult['id'], $db)) : ?>
+                            <button class="vote up active" data-post="<?= $searchResult['id'] ?>">upvote</button>
+                        <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $searchResult['id'], $db)) : ?>
+                            <button class="vote up" data-post="<?= $searchResult['id'] ?>">upvote</button>
+                        <?php else : ?>
+                            <!-- control data in js? to escape the button-problem? -->
+                            <button><a href="login.php">login to upvote</a></button>
+                        <?php endif; ?>
+                        <p class="upvotes"><?= $searchResult['upvotes'] ?></p>
+                    </div>
+                    <div class="content">
+                        <a href="<?= $searchResult['url'] ?>">
+                            <h2><?= $searchResult['title'] ?></h2>
+                        </a>
+                        <a href="/view.php?view=post&post_id=<?= $searchResult['id'] ?>">
+                            <?= $searchResult['comments'] ?> comments
+                        </a>
+                        <p> posted by
+                            <a href="/view.php?view=profile&user_id=<?= $searchResult['user_id'] ?>">
+                                <?= fetchPoster($searchResult['user_id'], $db) ?>
+                            </a>
+                            <?= getAge($searchResult['creation_time']) ?>
+                        </p>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <?php addmessage('No results') ?>
+        <?php endif; ?>
     <?php endif; ?>
     <?php if (isset($_SESSION['messages'])) : ?>
         <?php foreach ($_SESSION['messages'] as $message) : ?>

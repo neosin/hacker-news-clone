@@ -303,6 +303,46 @@ function fetchUser(int $userId, PDO $db): ?array
 
 // post functions
 
+function searchPosts(string $searchQuery, PDO $db): ?array
+{
+    $searchQuery = '%' . $searchQuery . '%';
+    $stmnt = $db->prepare(
+        "SELECT 
+        p.*,
+        COALESCE(v.upvote_count, 0) AS upvotes,
+        COALESCE(c.comment_count, 0) AS comments
+        FROM posts p
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS upvote_count
+            FROM upvotes
+            GROUP BY post_id
+        ) v
+        ON p.id = v.post_id
+        LEFT OUTER JOIN (
+            SELECT post_id, COUNT(post_id) AS comment_count
+            FROM COMMENTS
+            GROUP BY post_id
+        ) c
+        ON p.id = c.post_id
+        WHERE p.title LIKE :query
+        ORDER BY upvotes DESC, p.creation_time DESC;"
+    );
+    $stmnt->bindParam(":query", $searchQuery, PDO::PARAM_STR);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$results) {
+        return null;
+    }
+
+    return $results;
+}
+
 function validUrl(string $url): bool
 {
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
