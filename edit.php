@@ -41,28 +41,30 @@ if (!userLoggedIn()) {
 
 <main>
     <?php if ($_GET['edit'] === 'profile') : ?>
-        <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
-            <label for="profile_picture">profile picture</label>
-            <?php if (!isset($_SESSION['user']['image_url'])) : ?>
-                <img src="/assets/images/no-image.png" alt="no profile picture selected">
-            <?php else : ?>
-                <img src="<?= $_SESSION['user']['image_url'] ?>" alt="profile picture">
-            <?php endif; ?>
-            <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png">
-            <button type="submit">upload</button>
-        </form>
-        <form action="/app/users/profile.php" method="post">
-            <label for="user_name">user name</label>
-            <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">
-            <button type="submit">confirm username</button>
-        </form>
-        <form action="/app/users/profile.php" method="post">
-            <label for="bio">bio</label>
-            <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
-            <button type="submit">confirm bio</button>
-        </form>
-        <a href="/edit.php?edit=password"><button>change password</button></a>
-        <a href="/edit.php?edit=email"><button>change email</button></a>
+        <section class="profile">
+            <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
+                <label for="profile_picture">profile picture</label>
+                <?php if (!isset($_SESSION['user']['image_url'])) : ?>
+                    <img src="/assets/images/no-image.png" alt="no profile picture selected">
+                <?php else : ?>
+                    <img src="<?= $_SESSION['user']['image_url'] ?>" alt="profile picture">
+                <?php endif; ?>
+                <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png">
+                <button type="submit">upload</button>
+            </form>
+            <form action="/app/users/profile.php" method="post">
+                <label for="user_name">user name</label>
+                <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">
+                <button type="submit">confirm username</button>
+            </form>
+            <form action="/app/users/profile.php" method="post">
+                <label for="bio">bio</label>
+                <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
+                <button type="submit">confirm bio</button>
+            </form>
+            <a href="/edit.php?edit=password"><button>change password</button></a>
+            <a href="/edit.php?edit=email"><button>change email</button></a>
+        </section>
     <?php elseif ($_GET['edit'] === 'password') : ?>
         <form action="/app/users/profile.php" method="post">
             <label for="current_password">current password</label>

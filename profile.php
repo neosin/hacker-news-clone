@@ -6,13 +6,13 @@ if (!userLoggedIn()) {
     header("location: /");
     exit;
 } else {
-    $userPosts = fetchUserPosts($_SESSION['user']['id'], $db);
+    $userPosts = fetchUserPosts($_SESSION['user']['id'], $db); // order by upvotes?
     $userComments = fetchUserComments($_SESSION['user']['id'], $db);
 }
 
 ?>
 <main>
-    <section>
+    <section class="profile">
         <h1>profile</h1>
         <?php if (!isset($_SESSION['user']['image_url'])) : ?>
             <img src="/assets/images/no-image.png" alt="no profile picture selected">
@@ -21,11 +21,15 @@ if (!userLoggedIn()) {
         <?php endif; ?>
         <p><?= $_SESSION['user']['user_name'] ?></p>
         <p><?= $_SESSION['user']['bio'] ?></p>
-        <a href="/edit.php?edit=profile"><button>edit profile</button></a>
-        <a href="/app/users/logout.php"><button>logout</button></a>
+        <a href="/edit.php?edit=profile">
+            <button>edit profile</button>
+        </a>
+        <a href="/app/users/logout.php">
+            <button>logout</button>
+        </a>
         <?php if (isset($userPosts)) : ?>
             <h2>posts</h2>
-            <ul>
+            <ul class="user-posts">
                 <?php foreach ($userPosts as $userPost) : ?>
                     <li>
                         <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
@@ -34,7 +38,7 @@ if (!userLoggedIn()) {
             </ul>
         <?php else : ?>
             <h2>no posts</h2>
-            <a class="button" href="submit.php">submit post</a>
+            <a href="submit.php"><button>submit post</button></a>
         <?php endif; ?>
         <?php if (isset($userComments)) : ?>
             <h2>comments</h2>
@@ -46,7 +50,9 @@ if (!userLoggedIn()) {
                         </a>
                     </p>
                     <p><?= $userComment['comment'] ?></p>
-                    <a href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">edit comment</a>
+                    <a href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">
+                        <button>edit comment</button>
+                    </a>
                 </div>
             <?php endforeach; ?>
         <?php else : ?>

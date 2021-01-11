@@ -54,7 +54,7 @@ function getAge(string $birth): string
     return "today";
 }
 
-function addReturnPage(): void
+function addReturnPage(): void // don't use until fixed.
 {
     if (isset($_SESSION['return'])) {
         unset($_SESSION['return']);
@@ -67,7 +67,7 @@ function addReturnPage(): void
     }
 }
 
-function redirectToPage(string $url = null): void
+function redirectToPage(string $url = null): void // don't use until fixed.
 {
     if (!$url) {
         if (isset($_SESSION['return'])) {
@@ -657,7 +657,25 @@ function fetchComment(int $commentId, PDO $db): ?array
 // print posts functions
 function fetchPost(int $postId, PDO $db): ?array
 {
-    $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
+    // $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
+    $stmnt = $db->prepare("SELECT 
+    p.*,
+    COALESCE(v.upvote_count, 0) AS upvotes,
+    COALESCE(c.comment_count, 0) AS comments
+    FROM posts p
+    LEFT OUTER JOIN (
+        SELECT post_id, COUNT(post_id) AS upvote_count
+        FROM upvotes
+        GROUP BY post_id
+    ) v
+    ON p.id = v.post_id
+    LEFT OUTER JOIN (
+        SELECT post_id, COUNT(post_id) AS comment_count
+        FROM COMMENTS
+        GROUP BY post_id
+    ) c
+    ON p.id = c.post_id
+    WHERE p.id = :post_id");
     $stmnt->bindParam(":post_id", $postId, PDO::PARAM_INT);
     $stmnt->execute();
 

@@ -46,47 +46,67 @@ if (isset($_GET['view'])) {
 ?>
 <main>
     <?php if (isset($post)) : ?>
-        <article>
-            <a href="<?= $post['url'] ?>">
-                <h1><?= $post['title'] ?></h1>
-            </a>
-            <p><?= $post['description'] ?></p>
-            <p>
-                by
-                <a href="/view.php?view=profile&user_id=<?= $post['user_id'] ?>">
-                    <?= fetchPoster((int)$post['user_id'], $db) ?>
+        <article class="post grid">
+            <div class="half">
+                <div class="votes">
+                    <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
+                        <button class="vote active" data-post="<?= $post['id'] ?>">▲</button>
+                    <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
+                        <button class="vote" data-post="<?= $post['id'] ?>">▲</button>
+                    <?php else : ?>
+                        <button class="vote">▲</button>
+                    <?php endif; ?>
+                    <p class="upvotes"><?= $post['upvotes'] ?></p>
+                </div>
+                <a href="<?= $post['url'] ?>">
+                    <h1><?= $post['title'] ?></h1>
                 </a>
-            </p>
-            <p><?= $post['creation_time'] ?></p>
-            <?php if (userLoggedIn() && $post['user_id'] === $_SESSION['user']['id']) : ?>
-                <a href="/edit.php?edit=post&post_id=<?= $post['id'] ?>">
-                    edit post
-                </a>
-            <?php endif; ?>
-            <section class="comments">
+            </div>
+            <div class="full">
+                <p><?= $post['description'] ?></p>
+                <p>
+                    by
+                    <a href="/view.php?view=profile&user_id=<?= $post['user_id'] ?>">
+                        <?= fetchPoster((int)$post['user_id'], $db) ?>
+                    </a>
+                </p>
+                <p><?= $post['creation_time'] ?></p>
+                <?php if (userLoggedIn() && $post['user_id'] === $_SESSION['user']['id']) : ?>
+                    <div class="button">
+                        <a href="/edit.php?edit=post&post_id=<?= $post['id'] ?>">edit post</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <section class="comments full">
                 <?php if (isset($postComments)) : ?>
                     <?php foreach ($postComments as $postComment) : ?>
                         <div class="comment">
-                            <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?></a>
+                            <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?>:</a>
                             <p><?= $postComment['comment'] ?></p>
                             <?php if (isset($commentReplies)) : ?>
                                 <?php foreach ($commentReplies as $commentReply) : ?>
                                     <?php if ($commentReply['reply'] === $postComment['id']) : ?>
                                         <div class="comment reply">
-                                            <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?></a>
+                                            <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?>:</a>
                                             <p><?= $commentReply['comment'] ?></p>
                                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $commentReply['user_id']) : ?>
-                                                <a href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
+                                                <div class="button">
+                                                    <a href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
+                                                </div>
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             <?php if (userLoggedIn()) : ?>
-                                <a href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
+                                <div class="button">
+                                    <a href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
+                                </div>
                             <?php endif; ?>
                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $postComment['user_id']) : ?>
-                                <a href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
+                                <div class="button">
+                                    <a href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
+                                </div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -95,18 +115,21 @@ if (isset($_GET['view'])) {
                 <?php endif; ?>
             </section>
             <?php if (userLoggedIn()) : ?>
-                <form action="/app/posts/comment.php" method="post">
+                <form class="full" action="/app/posts/comment.php" method="post">
                     <label for="comment">comment</label>
                     <input type="hidden" id="post_id" name="post_id" value="<?= $post['id'] ?>">
                     <textarea id="comment" name="comment" rows="4" required></textarea>
                     <button type="submit">submit</button>
                 </form>
             <?php else : ?>
-                <a href="/login.php">login to comment</a>
+                <div class="button">
+                    <a href="/login.php">login to comment</a>
+                </div>
             <?php endif; ?>
         </article>
     <?php elseif (isset($profile)) : ?>
-        <section>
+        <section class="profile">
+            <h1>profile</h1>
             <?php if (!isset($profile['image_url'])) : ?>
                 <img src="/assets/images/no-image.png" alt="no profile picture selected">
             <?php else : ?>
@@ -116,7 +139,7 @@ if (isset($_GET['view'])) {
             <p><?= $profile['bio'] ?></p>
             <?php if (isset($userPosts)) : ?>
                 <h2>posts</h2>
-                <ul>
+                <ul class="user-posts">
                     <?php foreach ($userPosts as $userPost) : ?>
                         <li>
                             <a href="/view.php?view=post&post_id=<?= $userPost['id'] ?>"><?= $userPost['title'] ?></a>
@@ -156,12 +179,11 @@ if (isset($_GET['view'])) {
                 <article class="post">
                     <div class="votes">
                         <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $searchResult['id'], $db)) : ?>
-                            <button class="vote up active" data-post="<?= $searchResult['id'] ?>">upvote</button>
+                            <button class="vote active" data-post="<?= $searchResult['id'] ?>">▲</button>
                         <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $searchResult['id'], $db)) : ?>
-                            <button class="vote up" data-post="<?= $searchResult['id'] ?>">upvote</button>
+                            <button class="vote" data-post="<?= $searchResult['id'] ?>">▲</button>
                         <?php else : ?>
-                            <!-- control data in js? to escape the button-problem? -->
-                            <button><a href="login.php">login to upvote</a></button>
+                            <button class="vote">▲</button>
                         <?php endif; ?>
                         <p class="upvotes"><?= $searchResult['upvotes'] ?></p>
                     </div>
@@ -187,7 +209,7 @@ if (isset($_GET['view'])) {
     <?php endif; ?>
     <?php if (isset($_SESSION['messages'])) : ?>
         <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p><?= $message ?></p>
+            <p class="error"><?= $message ?></p>
         <?php endforeach; ?>
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
