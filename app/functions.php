@@ -27,12 +27,44 @@ function checkUserId(int $checkId, int $userId): bool
     return true;
 }
 
-function getAge(string $birth): int
+function getAge(string $birth): string
 {
     $today = new DateTime();
     $birth = new DateTime($birth);
     $interval = $today->diff($birth);
-    return $interval->days;
+
+    if ($interval->y === 1) {
+        return $interval->y . " year ago";
+    } elseif ($interval->y > 0) {
+        return $interval->y . " years ago";
+    }
+
+    if ($interval->m === 1) {
+        return $interval->m . " month ago";
+    } else if ($interval->m > 0) {
+        return $interval->m . " months ago";
+    }
+
+    if ($interval->m === 0 && $interval->days === 1) {
+        return $interval->days . " day ago";
+    } elseif ($interval->m === 0 && $interval->days > 0) {
+        return $interval->days . " days ago";
+    }
+
+    return "today";
+}
+
+function addReturnPage(): void
+{
+    if (isset($_SESSION['return'])) {
+        unset($_SESSION['return']);
+    }
+
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+    } else {
+        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
+    }
 }
 
 // login functions

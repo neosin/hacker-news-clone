@@ -2,7 +2,7 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-$return = '?return_to=' . $_SERVER['PHP_SELF'];
+addReturnPage();
 
 if (isset($_GET['page'])) {
     $page = (int)filter_var($_GET['page'], FILTER_SANITIZE_NUMBER_INT);
@@ -25,9 +25,6 @@ if (isset($_GET['order_by'])) {
         exit;
     }
 }
-
-print_r($_SERVER);
-// echo $return;
 
 ?>
 
@@ -63,7 +60,7 @@ print_r($_SERVER);
                         <a href="/view.php?view=profile&user_id=<?= $post['user_id'] ?>">
                             <?= fetchPoster($post['user_id'], $db) ?>
                         </a>
-                        <?= getAge($post['creation_time']) ?> days ago
+                        <?= getAge($post['creation_time']) ?>
                     </p>
                 </div>
             </article>
