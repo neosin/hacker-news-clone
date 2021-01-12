@@ -144,8 +144,28 @@ function loginUser(array $user, PDO $db): bool
     }
 }
 
-function deleteUser(): void
+function deleteUser(int $userId, PDO $db): void
 {
+    if (userLoggedIn() && $userId === (int)$_SESSION['user']['id']) {
+        deleteProfilePicture($userId, $db);
+
+        $sqlQueries = [
+            "DELETE FROM users WHERE id = :id",
+            "DELETE FROM posts WHERE user_id = :id",
+            "DELETE FROM comments WHERE user_id = :id",
+            "DELETE FROM upvotes WHERE user_id = :id"
+        ];
+
+        foreach ($sqlQueries as $query) {
+            $stmnt = $db->prepare($query);
+            $stmnt->bindParam(":id", $userId, PDO::PARAM_INT);
+            $stmnt->execute();
+
+            if (!$stmnt) {
+                die(var_dump($db->errorInfo()));
+            }
+        }
+    }
 }
 
 // signup functions
@@ -296,19 +316,23 @@ function deleteProfilePicture(int $userId, PDO $db): void
     }
 }
 
-function checkPassword(int $id, string $password, PDO $db): bool
+function checkPassword(int $userId, string $password, PDO $db): bool
 {
     $stmnt = $db->prepare("SELECT password FROM users WHERE id = :id");
-    $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->bindParam(":id", $userId, PDO::PARAM_INT);
     $stmnt->execute();
 
     if (!$stmnt) {
         die(var_dump($db->errorInfo()));
     }
 
-    $userPassword = $stmnt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
 
-    if (!password_verify($password, $userPassword['password'])) {
+    if (!$result) {
+        return false;
+    }
+
+    if (!password_verify($password, $result['password'])) {
         return false;
     }
 

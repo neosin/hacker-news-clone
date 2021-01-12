@@ -143,6 +143,20 @@ if (userLoggedIn()) {
             header("location: /../../edit.php?edit=delete_profile");
             exit;
         }
+
+        if (!checkPassword($user['id'], $password, $db)) {
+            addMessage('Wrong password');
+            header("location: /../../edit.php?edit=delete_profile");
+            exit;
+        }
+
+        // mabye more checks?
+
+        deleteUser($user['id'], $db);
+        addMessage('Account deleted');
+        unset($_SESSION['user']);
+        header("location: ../../../");
+        exit;
     }
 }
 
