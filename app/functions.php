@@ -116,7 +116,6 @@ function setUserData(array $user, PDO $db): void //return array?
 
 function loginUser(array $user, PDO $db): bool
 {
-    $messages = [];
     $email = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
     $stmnt = $db->prepare("SELECT * FROM users WHERE email = :email");
     $stmnt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -131,10 +130,12 @@ function loginUser(array $user, PDO $db): bool
     if (!$result) {
         addMessage('Not registered');
         return false;
+    } else {
+        $_SESSION['return']['email'] = $email;
     }
 
     if (password_verify($user['password'], $result['password'])) {
-        unset($user['password'], $result['password']);
+        unset($user['password'], $result['password'], $_SESSION['return']);
         $_SESSION['user'] = $result;
         return true;
     } else {

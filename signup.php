@@ -10,12 +10,6 @@ if (userLoggedIn()) {
 ?>
 <main>
     <section>
-        <?php if (isset($_SESSION['messages'])) : ?>
-            <?php foreach ($_SESSION['messages'] as $message) : ?>
-                <p><?= $message ?></p>
-            <?php endforeach; ?>
-            <?php unset($_SESSION['messages']) ?>
-        <?php endif; ?>
         <h1>signup</h1>
         <form action="/app/users/signup.php" method="post">
             <label for="username">username</label>
@@ -29,6 +23,12 @@ if (userLoggedIn()) {
             <button type="submit">submit</button>
         </form>
     </section>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']) ?>
+    <?php endif; ?>
 </main>
 
 <?php

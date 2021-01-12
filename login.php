@@ -7,6 +7,11 @@ if (userLoggedIn()) {
     exit;
 }
 
+if (isset($_SESSION['return'])) {
+    $return = $_SESSION['return'];
+    unset($_SESSION['return']);
+}
+
 ?>
 <section class="login">
     <?php if (isset($_SESSION['messages'])) : ?>
@@ -18,7 +23,7 @@ if (userLoggedIn()) {
     <h1>login</h1>
     <form action="/app/users/login.php" method="post">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="email" value="<?= isset($return) ? $return['email'] : "" ?>" required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
         <button type="submit">login</button>
