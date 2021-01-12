@@ -123,13 +123,25 @@ if (userLoggedIn()) {
         exit;
     }
 
-    if (isset($_POST['delete_picture'])) {
+    if (userLoggedin() && isset($_POST['delete_picture'])) {
         $url = explode("/app/users", $_SESSION['user']['image_url']);
         $url = __DIR__ . $url[1];
         if (realpath($url)) {
             unlink($url);
             addMessage('Profile picture deleted');
             deleteProfilePicture($user['id'], $db);
+        }
+    }
+
+    if (userLoggedin() && isset($_POST['delete_profile'], $_POST['password'], $_POST['password_check'])) {
+
+        $password = $_POST['password'];
+        $passwordRepeat = $_POST['password_check'];
+
+        if (!passwordMatch($password, $passwordRepeat)) {
+            addMessage('Unmatching passwords');
+            header("location: /../../edit.php?edit=delete_profile");
+            exit;
         }
     }
 }

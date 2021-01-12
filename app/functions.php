@@ -98,7 +98,7 @@ function pageActive(string $url): string
     }
 }
 
-// login functions
+// user functions
 
 function setUserData(array $user, PDO $db): void //return array?
 {
@@ -142,6 +142,10 @@ function loginUser(array $user, PDO $db): bool
         addMessage('Incorrect password');
         return false;
     }
+}
+
+function deleteUser(): void
+{
 }
 
 // signup functions

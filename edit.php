@@ -54,6 +54,7 @@ if (!userLoggedIn()) {
                 <a class="button" href="/edit.php?edit=password">change password</a>
                 <a class="button" href="/edit.php?edit=email">change email</a>
             </div>
+            <a class="button delete" href="/edit.php?edit=delete_profile">delete profile</a>
         </section>
     <?php elseif ($_GET['edit'] === 'profile_picture') : ?>
         <section class="profile">
@@ -135,6 +136,18 @@ if (!userLoggedIn()) {
             <textarea id="reply" name="reply" rows="4" required></textarea>
             <button type="submit">submit</button>
         </form>
+    <?php elseif ($_GET['edit'] === 'delete_profile') : ?>
+        <section class="delete-profile">
+            <p>Warning, if you choose to delete your profile there's no going back!</p>
+            <form action="/app/users/profile.php" method="post">
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" required>
+                <label for="password_check">repeat password</label>
+                <input type="password" name="password_check" id="password_check" required>
+                <input type="hidden" name="delete_profile" id="delete_profile" value="true">
+                <button class="delete" type="submit">delete profile</button>
+            </form>
+        </section>
     <?php else : ?>
         <p class="message">i don't even know</p>
     <?php endif; ?>
