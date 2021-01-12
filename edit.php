@@ -2,11 +2,8 @@
 require __DIR__ . '/app/autoload.php';
 require __DIR__ . '/views/header.php';
 
-$messages = [];
-
 if (!userLoggedIn()) {
     header('location: /');
-    // redirectToPage("/login.php");
     exit;
 } else {
     if (!isset($_GET['edit'])) {
@@ -18,7 +15,6 @@ if (!userLoggedIn()) {
             if (!checkUserId((int)$post['user_id'], (int)$_SESSION['user']['id'])) {
                 addMessage('Post not submitted by you');
                 header('location: /profile.php');
-                // redirectToPage("/profile.php");
                 exit;
             }
         }
@@ -28,7 +24,6 @@ if (!userLoggedIn()) {
             if (!checkUserId((int)$comment['user_id'], (int)$_SESSION['user']['id'])) {
                 addMessage('Comment not submited by you');
                 header('location: /profile.php');
-                // redirectToPage("/profile.php");
                 exit;
             }
         } elseif ($_GET['edit'] === 'reply' && isset($_GET['comment_id'])) {
@@ -58,6 +53,12 @@ if (!userLoggedIn()) {
                 <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png">
                 <button type="submit">upload</button>
             </form>
+            <?php if (isset($_SESSION['user']['image_url'])) : ?>
+                <form action="/app/users/profile.php" method="post">
+                    <input type="hidden" name="delete_picture" id="delete_picture" value="true">
+                    <button class="delete" type="submit">reset profile picture</button>
+                </form>
+            <?php endif; ?>
             <form action="/app/users/profile.php" method="post">
                 <label for="user_name">user name</label>
                 <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">

@@ -117,6 +117,16 @@ if (userLoggedIn()) {
         header("location: /../../edit.php?edit=password");
         exit;
     }
+
+    if (isset($_POST['delete_picture'])) {
+        $url = explode("/app/users", $_SESSION['user']['image_url']);
+        $url = __DIR__ . $url[1];
+        if (realpath($url)) {
+            unlink($url);
+            deleteProfilePicture($user['id'], $db);
+        }
+    }
+
     unset($user);
 }
 

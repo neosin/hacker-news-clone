@@ -54,18 +54,18 @@ function getAge(string $birth): string
     return "today";
 }
 
-// function addReturnPage(): void // don't use until fixed.
-// {
-//     if (isset($_SESSION['return'])) {
-//         unset($_SESSION['return']);
-//     }
+function addReturnPage(): void // don't use until fixed.
+{
+    if (isset($_SESSION['return'])) {
+        unset($_SESSION['return']);
+    }
 
-//     if (isset($_SERVER['QUERY_STRING'])) {
-//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
-//     } else {
-//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
-//     }
-// }
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+    } else {
+        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
+    }
+}
 
 function redirectToPage(string $url = null): void // don't use until fixed.
 {
@@ -273,6 +273,17 @@ function editProfilePicture(int $id, string $imageURL, PDO $db): void
     $stmnt = $db->prepare("UPDATE users SET image_url = :image_url WHERE id = :id");
     $stmnt->bindParam(":image_url", $imageURL, PDO::PARAM_STR);
     $stmnt->bindParam(":id", $id, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+}
+
+function deleteProfilePicture(int $userId, PDO $db): void
+{
+    $stmnt = $db->prepare("UPDATE users SET image_url = NULL WHERE id = :id");
+    $stmnt->bindParam(":id", $userId, PDO::PARAM_STR);
     $stmnt->execute();
 
     if (!$stmnt) {
