@@ -41,6 +41,8 @@ if (userLoggedIn()) {
         move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dest);
         editProfilePicture($user['id'], $dest, $db);
         addMessage("Profile picture updated");
+        header("location: /../../edit.php?edit=profile");
+        exit;
     }
 
     if (isset($_POST['user_name']) && $_POST['user_name'] !== $_SESSION['user']['user_name']) {
@@ -65,6 +67,7 @@ if (userLoggedIn()) {
     if (isset($_POST['bio']) && $_POST['bio'] !== $_SESSION['user']['bio']) {
         $user['bio'] = trim(filter_var($_POST['bio'], FILTER_SANITIZE_STRING));
         editBio($user['id'], $user['bio'], $db);
+        addMessage('Bio updated');
     }
 
     if (isset($_POST['email'], $_POST['password'])) {
@@ -129,8 +132,7 @@ if (userLoggedIn()) {
             deleteProfilePicture($user['id'], $db);
         }
     }
-
-    unset($user);
 }
 
-header("location: /../../profile.php");
+// header("location: /../../profile.php");
+header("location: /../../edit.php?edit=profile");

@@ -35,42 +35,45 @@ if (!userLoggedIn()) {
 ?>
 
 <main>
-    <?php if (isset($_SESSION['messages'])) : ?>
-        <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p><?= $message ?></p>
-        <?php endforeach; ?>
-        <?php unset($_SESSION['messages']); ?>
-    <?php endif; ?>
     <?php if ($_GET['edit'] === 'profile') : ?>
+        <section class="profile">
+            <?php if (!isset($_SESSION['user']['image_url'])) : ?>
+                <img src="/assets/images/no-image.png" alt="no profile picture selected">
+            <?php else : ?>
+                <img src="<?= $_SESSION['user']['image_url'] ?>" alt="profile picture">
+            <?php endif; ?>
+            <a href="/edit.php?edit=profile_picture" class="button">change profile picture</a>
+            <form action="/app/users/profile.php" method="post">
+                <label for="user_name">user name</label>
+                <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>" required>
+                <label for="bio">bio</label>
+                <textarea id="bio" name="bio" rows="4" required><?= $_SESSION['user']['bio']; ?></textarea>
+                <button type="submit">confirm changes</button>
+            </form>
+            <div class="button-group">
+                <a class="button" href="/edit.php?edit=password">change password</a>
+                <a class="button" href="/edit.php?edit=email">change email</a>
+            </div>
+        </section>
+    <?php elseif ($_GET['edit'] === 'profile_picture') : ?>
         <section class="profile">
             <form action="/app/users/profile.php" method="post" enctype="multipart/form-data">
                 <label for="profile_picture">profile picture</label>
+                <!-- migth be shorthanded, and this migth be in need of a rework -->
                 <?php if (!isset($_SESSION['user']['image_url'])) : ?>
                     <img src="/assets/images/no-image.png" alt="no profile picture selected">
                 <?php else : ?>
                     <img src="<?= $_SESSION['user']['image_url'] ?>" alt="profile picture">
                 <?php endif; ?>
-                <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png">
+                <input type="file" name="profile_picture" id="profile_picture" accept=".jpeg, .gif, .png" required>
                 <button type="submit">upload</button>
             </form>
             <?php if (isset($_SESSION['user']['image_url'])) : ?>
                 <form action="/app/users/profile.php" method="post">
                     <input type="hidden" name="delete_picture" id="delete_picture" value="true">
-                    <button class="delete" type="submit">reset profile picture</button>
+                    <button class="delete" type="submit">delete profile picture</button>
                 </form>
             <?php endif; ?>
-            <form action="/app/users/profile.php" method="post">
-                <label for="user_name">user name</label>
-                <input type="text" name="user_name" id="user_name" value="<?= $_SESSION['user']['user_name']; ?>">
-                <button type="submit">confirm username</button>
-            </form>
-            <form action="/app/users/profile.php" method="post">
-                <label for="bio">bio</label>
-                <textarea id="bio" name="bio" rows="4"><?= $_SESSION['user']['bio']; ?></textarea>
-                <button type="submit">confirm bio</button>
-            </form>
-            <a href="/edit.php?edit=password"><button>change password</button></a>
-            <a href="/edit.php?edit=email"><button>change email</button></a>
         </section>
     <?php elseif ($_GET['edit'] === 'password') : ?>
         <form action="/app/users/profile.php" method="post">
@@ -132,6 +135,14 @@ if (!userLoggedIn()) {
             <textarea id="reply" name="reply" rows="4" required></textarea>
             <button type="submit">submit</button>
         </form>
+    <?php else : ?>
+        <p class="message">i don't even know</p>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p class="message"><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']); ?>
     <?php endif; ?>
 </main>
 

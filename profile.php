@@ -27,11 +27,12 @@ if (!userLoggedIn()) {
         <?php endif; ?>
         <p><?= $_SESSION['user']['user_name'] ?></p>
         <p><?= $_SESSION['user']['bio'] ?></p>
-        <a class="button" href="/edit.php?edit=profile">edit profile</a>
-        <a class="button" href="/app/users/logout.php">logout</a>
+        <div class="button-group">
+            <a class="button" href="/edit.php?edit=profile">edit profile</a>
+            <a class="button" href="/app/users/logout.php">logout</a>
+        </div>
         <?php if (isset($userPosts)) : ?>
             <h2>posts</h2>
-            <a class="button" href="submit.php">submit post</a>
             <ul class="user-posts">
                 <?php foreach ($userPosts as $userPost) : ?>
                     <li>
@@ -39,6 +40,7 @@ if (!userLoggedIn()) {
                     </li>
                 <?php endforeach; ?>
             </ul>
+            <a class="button" href="submit.php">submit post</a>
         <?php else : ?>
             <h2>no posts</h2>
             <a class="button" href="submit.php">submit post</a>

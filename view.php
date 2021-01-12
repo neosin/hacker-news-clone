@@ -79,14 +79,16 @@ if (isset($_GET['view'])) {
                 <?php if (isset($postComments)) : ?>
                     <?php foreach ($postComments as $postComment) : ?>
                         <div class="comment">
-                            <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?>:</a>
-                            <p><?= $postComment['comment'] ?></p>
+                            <small>posted <?= getAge($postComment['creation_time']) ?></small>
+                            <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?> says:</a>
+                            <p class="comment"><?= $postComment['comment'] ?></p>
                             <?php if (isset($commentReplies)) : ?>
                                 <?php foreach ($commentReplies as $commentReply) : ?>
                                     <?php if ($commentReply['reply'] === $postComment['id']) : ?>
                                         <div class="comment reply">
-                                            <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?>:</a>
-                                            <p><?= $commentReply['comment'] ?></p>
+                                            <small>posted <?= getAge($commentReply['creation_time']) ?></small>
+                                            <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?> replies: </a>
+                                            <p class="comment"><?= $commentReply['comment'] ?></p>
                                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $commentReply['user_id']) : ?>
                                                 <a class="button" href="/edit.php?edit=comment&comment_id=<?= $commentReply['id'] ?>">edit comment</a>
                                             <?php endif; ?>
