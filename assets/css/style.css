@@ -121,7 +121,8 @@ article.post * {
 }
 
 article.post {
-  cursor: pointer;
+  /* until fixed */
+  /* cursor: pointer; */
   margin: 12px 0px;
   padding: 16px;
   border-radius: 4px;

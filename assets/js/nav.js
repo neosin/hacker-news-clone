@@ -21,15 +21,15 @@ if (window.location.href.includes("top")) {
     navItems[0].classList.toggle("active");
 }
 
-const articleBox = document.querySelector("section.posts");
-if (articleBox) {
-    const clickables = articleBox.querySelectorAll("article");
-    clickables.forEach((clickable) => {
-        let viewPage = clickable.querySelector("a.view");
-        viewPage = viewPage.href;
-        clickable.addEventListener("click", () => {
-            console.log("hello");
-            window.location.href = viewPage;
-        });
-    });
-}
+// please fix
+// const articleBox = document.querySelector("section.posts");
+// if (articleBox) {
+//     const clickables = articleBox.querySelectorAll("article");
+//     clickables.forEach((clickable) => {
+//         let viewPage = clickable.querySelector("a.view");
+//         viewPage = viewPage.href;
+//         clickable.addEventListener("click", (e) => {
+//             window.location.href = viewPage;
+//         });
+//     });
+// }
