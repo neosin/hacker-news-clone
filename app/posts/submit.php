@@ -16,12 +16,15 @@ if (userLoggedIn()) {
 
         if (emptyInput($newPost)) {
             addMessage('Empty fields');
+            $_SESSION['return'] = $newPost;
             header("location: /../../submit.php");
             exit;
         }
 
         if (!validUrl($newPost['url'])) {
             addMessage('Invalid URL');
+            unset($newPost['url']);
+            $_SESSION['return'] = $newPost;
             header("location: /../../submit.php");
             exit;
         }

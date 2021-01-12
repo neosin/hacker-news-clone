@@ -15,7 +15,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
         addMessage('Title changed');
     }
 
-    if (isset($_POST['description']) && $_POST['description'] !== $post['description']) {
+    if (isset($_POST['description']) && $_POST['description'] !== html_entity_decode($post['description'], ENT_QUOTES)) {
         $newDescription = trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING));
         editPostDescription($userId, $postId, $newDescription, $db);
         addMessage('Description changed');

@@ -40,6 +40,7 @@ if (userLoggedIn()) {
         $dest = __DIR__ . '/uploads/' . $_SESSION['user']['user_name'] . '-profile-picture-' . $_FILES['profile_picture']['name'];
         move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dest);
         editProfilePicture($user['id'], $dest, $db);
+        addMessage("Profile picture updated");
     }
 
     if (isset($_POST['user_name']) && $_POST['user_name'] !== $_SESSION['user']['user_name']) {
@@ -58,6 +59,7 @@ if (userLoggedIn()) {
         }
 
         editUserName($user['id'], $user['new_user_name'], $db);
+        addMessage('Username changed to ' . $user['new_user_name']);
     }
 
     if (isset($_POST['bio']) && $_POST['bio'] !== $_SESSION['user']['bio']) {
@@ -113,7 +115,7 @@ if (userLoggedIn()) {
         }
 
         changePassword($user['id'], $_POST['new_password'], $db);
-        addMessage('Password changed!');
+        addMessage('Password changed');
         header("location: /../../edit.php?edit=password");
         exit;
     }
@@ -123,6 +125,7 @@ if (userLoggedIn()) {
         $url = __DIR__ . $url[1];
         if (realpath($url)) {
             unlink($url);
+            addMessage('Profile picture deleted');
             deleteProfilePicture($user['id'], $db);
         }
     }
