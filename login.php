@@ -14,12 +14,6 @@ if (isset($_SESSION['return'])) {
 
 ?>
 <section class="login">
-    <?php if (isset($_SESSION['messages'])) : ?>
-        <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p class="error"><?= $message ?></p>
-        <?php endforeach; ?>
-        <?php unset($_SESSION['messages']) ?>
-    <?php endif; ?>
     <h1>login</h1>
     <form action="/app/users/login.php" method="post">
         <label for="email">Email</label>
@@ -29,6 +23,12 @@ if (isset($_SESSION['return'])) {
         <button type="submit">login</button>
     </form>
     <a class="button" href="signup.php">register account</a>
+    <?php if (isset($_SESSION['messages'])) : ?>
+        <?php foreach ($_SESSION['messages'] as $message) : ?>
+            <p class="error"><?= $message ?></p>
+        <?php endforeach; ?>
+        <?php unset($_SESSION['messages']) ?>
+    <?php endif; ?>
 </section>
 
 <?php

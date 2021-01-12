@@ -31,6 +31,7 @@ if (!userLoggedIn()) {
         <a class="button" href="/app/users/logout.php">logout</a>
         <?php if (isset($userPosts)) : ?>
             <h2>posts</h2>
+            <a class="button" href="submit.php">submit post</a>
             <ul class="user-posts">
                 <?php foreach ($userPosts as $userPost) : ?>
                     <li>
