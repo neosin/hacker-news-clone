@@ -47,7 +47,7 @@ if (isset($_GET['view'])) {
 <main>
     <?php if (isset($post)) : ?>
         <article class="post grid">
-            <div class="half">
+            <div class="top">
                 <div class="votes">
                     <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                         <button class="vote active" data-post="<?= $post['id'] ?>">▲</button>
