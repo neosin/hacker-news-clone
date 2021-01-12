@@ -54,18 +54,18 @@ function getAge(string $birth): string
     return "today";
 }
 
-function addReturnPage(): void // don't use until fixed.
-{
-    if (isset($_SESSION['return'])) {
-        unset($_SESSION['return']);
-    }
+// function addReturnPage(): void // don't use until fixed.
+// {
+//     if (isset($_SESSION['return'])) {
+//         unset($_SESSION['return']);
+//     }
 
-    if (isset($_SERVER['QUERY_STRING'])) {
-        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
-    } else {
-        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
-    }
-}
+//     if (isset($_SERVER['QUERY_STRING'])) {
+//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+//     } else {
+//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
+//     }
+// }
 
 function redirectToPage(string $url = null): void // don't use until fixed.
 {
