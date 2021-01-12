@@ -10,19 +10,19 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
     $post = fetchPost($postId, $db);
 
     if (isset($_POST['title']) && $_POST['title'] !== $post['title']) { //validate title?
-        $newTitle = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
+        $newTitle = trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING));
         editPostTitle($userId, $postId, $newTitle, $db);
         addMessage('Title changed');
     }
 
     if (isset($_POST['description']) && $_POST['description'] !== $post['description']) {
-        $newDescription = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
+        $newDescription = trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING));
         editPostDescription($userId, $postId, $newDescription, $db);
         addMessage('Description changed');
     }
 
     if (isset($_POST['url']) && $_POST['url'] !== $post['url']) {
-        $newUrl = filter_var($_POST['url'], FILTER_SANITIZE_URL);
+        $newUrl = trim(filter_var($_POST['url'], FILTER_SANITIZE_URL));
         if (!validUrl($newUrl)) {
             addMessage('Invalid URL');
             header("location: /../../edit.php?edit=post&post_id=$postId");

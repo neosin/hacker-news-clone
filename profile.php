@@ -18,8 +18,8 @@ if (!userLoggedIn()) {
         <?php endforeach; ?>
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
+    <h1>profile</h1>
     <section class="profile">
-        <h1>profile</h1>
         <?php if (!isset($_SESSION['user']['image_url'])) : ?>
             <img src="/assets/images/no-image.png" alt="no profile picture selected">
         <?php else : ?>

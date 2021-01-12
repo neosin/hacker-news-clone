@@ -87,7 +87,7 @@ if (!userLoggedIn()) {
             <input type="email" name="email" id="email" value="<?= $_SESSION['user']['email'] ?>" required>
             <label for="password">password</label>
             <input type="password" name="password" id="password" required>
-            <button type="submit">submit</button>
+            <button class="warning" type="submit">submit</button>
         </form>
     <?php elseif ($_GET['edit'] === 'post') : ?>
         <form action="/app/posts/edit.php" method="post">
@@ -103,7 +103,7 @@ if (!userLoggedIn()) {
         <form action="/app/posts/edit.php" method="post">
             <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
             <input type="hidden" name="delete" id="delete" value="true">
-            <button type="submit" class="delete">delete post</button>
+            <button class="delete" type="submit">delete post</button>
         </form>
     <?php elseif ($_GET['edit'] === 'comment') : ?>
         <form action="/app/posts/comment.php" method="post">

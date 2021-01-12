@@ -43,7 +43,7 @@ if (userLoggedIn()) {
     }
 
     if (isset($_POST['user_name']) && $_POST['user_name'] !== $_SESSION['user']['user_name']) {
-        $user['new_user_name'] = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
+        $user['new_user_name'] = trim(filter_var($_POST['user_name'], FILTER_SANITIZE_STRING));
 
         if (emptyInput($user)) {
             addMessage('Empty fields');
@@ -61,12 +61,12 @@ if (userLoggedIn()) {
     }
 
     if (isset($_POST['bio']) && $_POST['bio'] !== $_SESSION['user']['bio']) {
-        $user['bio'] = filter_var($_POST['bio'], FILTER_SANITIZE_STRING);
+        $user['bio'] = trim(filter_var($_POST['bio'], FILTER_SANITIZE_STRING));
         editBio($user['id'], $user['bio'], $db);
     }
 
     if (isset($_POST['email'], $_POST['password'])) {
-        $user['new_email'] = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $user['new_email'] = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
         $user['password'] = $_POST['password'];
 
         if (emptyInput($user)) {

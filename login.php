@@ -21,7 +21,7 @@ if (userLoggedIn()) {
         <input type="email" name="email" id="email" required>
         <label for="password">Password</label>
         <input type="password" name="password" id="password" required>
-        <button type="submit">Submit</button>
+        <button type="submit">login</button>
     </form>
     <a class="button" href="signup.php">register account</a>
 </section>

@@ -26,6 +26,7 @@ if (isset($_GET['order_by'])) {
 
 ?>
 <header>
+    <h1>news</h1>
     <?php if (userLoggedIn()) : ?>
         <a class="button" href="submit.php">submit post</a>
     <?php endif; ?>
@@ -62,7 +63,7 @@ if (isset($_GET['order_by'])) {
                     <a href="<?= $post['url'] ?>">
                         <h2><?= $post['title'] ?></h2>
                     </a>
-                    <a href="/view.php?view=post&post_id=<?= $post['id'] ?>">
+                    <a class="view" href="/view.php?view=post&post_id=<?= $post['id'] ?>">
                         <?= $post['comments'] ?> comments
                     </a>
                     <p> posted by

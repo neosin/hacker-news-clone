@@ -9,9 +9,9 @@ if (userLoggedIn()) {
 
     if (isset($_POST['title'], $_POST['description'], $_POST['url'])) {
         $newPost = [
-            'title' => filter_var($_POST['title'], FILTER_SANITIZE_STRING),
-            'description' => filter_var($_POST['description'], FILTER_SANITIZE_STRING),
-            'url' => filter_var($_POST['url'], FILTER_SANITIZE_URL),
+            'title' => trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING)),
+            'description' => trim(filter_var($_POST['description'], FILTER_SANITIZE_STRING)),
+            'url' => trim(filter_var($_POST['url'], FILTER_SANITIZE_URL)),
         ];
 
         if (emptyInput($newPost)) {
