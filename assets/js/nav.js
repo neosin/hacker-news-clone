@@ -21,7 +21,6 @@ if (window.location.href.includes("top")) {
   navItems[0].classList.toggle("active");
 }
 
-// please fix
 const articleBox = document.querySelector("section.posts");
 if (articleBox) {
   const clickables = articleBox.querySelectorAll("article");
