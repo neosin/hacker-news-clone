@@ -48,7 +48,6 @@ if (isset($_GET['order_by'])) {
     </section>
     <section class="posts">
         <?php foreach ($posts as $post) : ?>
-
             <article class="post">
                 <div class="votes">
                     <?php if (userLoggedIn() && userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
@@ -75,7 +74,6 @@ if (isset($_GET['order_by'])) {
                     </p>
                 </div>
             </article>
-
         <?php endforeach; ?>
     </section>
     <?php if ($page > 0) : ?>

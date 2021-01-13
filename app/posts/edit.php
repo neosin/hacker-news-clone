@@ -42,7 +42,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
     exit;
 }
 if (isset($postId)) {
-    header("location: /../../edit.php?edit=post&post_id=$postId");
+    header("location: /../../view.php?view=post&post_id=$postId");
 } else { //?
     header("location: /../../profile.php");
 }

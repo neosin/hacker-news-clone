@@ -151,6 +151,7 @@ if (isset($_GET['view'])) {
                             </a>
                         </p>
                         <p><?= $userComment['comment'] ?></p>
+                        <small>posted <?= getAge($userComment['creation_time']) ?></small>
                     </div>
                 <?php endforeach; ?>
             <?php else : ?>

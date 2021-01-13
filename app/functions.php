@@ -147,13 +147,13 @@ function loginUser(array $user, PDO $db): bool
 function deleteUser(int $userId, PDO $db): void
 {
     if (userLoggedIn() && $userId === (int)$_SESSION['user']['id']) {
-        // deleteProfilePicture($userId, $db);
-
+        deleteProfilePicture($userId, $db);
         $sqlQueries = [
             "DELETE FROM users WHERE id = :id",
             "DELETE FROM posts WHERE user_id = :id",
+            "DELETE FROM upvotes WHERE user_id = :id",
+            "SELECT * FROM comments WHERE user_id = :id",
             "DELETE FROM comments WHERE user_id = :id",
-            "DELETE FROM upvotes WHERE user_id = :id"
         ];
 
         foreach ($sqlQueries as $query) {
@@ -163,6 +163,31 @@ function deleteUser(int $userId, PDO $db): void
 
             if (!$stmnt) {
                 die(var_dump($db->errorInfo()));
+            }
+
+            if ($query === $sqlQueries[3]) {
+                $stmnt = $db->prepare($query);
+                $stmnt->bindParam(":id", $userId, PDO::PARAM_INT);
+                $stmnt->execute();
+
+                if (!$stmnt) {
+                    die(var_dump($db->errorInfo()));
+                }
+
+                $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+
+                if ($results) {
+                    foreach ($results as $result) {
+                        $commentId = $result['id'];
+                        $stmnt = $db->prepare("DELETE FROM comments WHERE reply = :comment_id");
+                        $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+                        $stmnt->execute();
+
+                        if (!$stmnt) {
+                            die(var_dump($db->errorInfo()));
+                        }
+                    }
+                }
             }
         }
     }

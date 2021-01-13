@@ -120,19 +120,19 @@ article.post * {
 }
 
 article.post {
-  /* until fixed */
-  /* cursor: pointer; */
+  cursor: pointer;
   margin: 12px 0px;
   padding: 16px;
   border-radius: 4px;
   box-shadow: 1px 1px 4px;
   display: flex;
   justify-content: flex-start;
-  transition: transform 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 article.post:hover {
   transform: scale(1.005);
+  box-shadow: 1px 1px 8px;
 }
 
 article.post h1 {
@@ -175,6 +175,7 @@ article.post.grid {
 
 article.post.grid:hover {
   transform: none;
+  box-shadow: 1px 1px 4px;
 }
 
 form.full {

@@ -55,6 +55,7 @@ if (!userLoggedIn()) {
                         </a>
                     </p>
                     <p><?= $userComment['comment'] ?></p>
+                    <small>posted <?= getAge($userComment['creation_time']) ?></small>
                     <a class="button" href="/edit.php?edit=comment&comment_id=<?= $userComment['id'] ?>">edit comment</a>
                 </div>
             <?php endforeach; ?>

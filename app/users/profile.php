@@ -74,8 +74,9 @@ if (userLoggedIn()) {
         addMessage('Bio updated');
     }
 
-    if (isset($_POST['email'], $_POST['password'])) {
-        $user['new_email'] = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
+    if (isset($_POST['current_email'], $_POST['new_email'], $_POST['password'])) {
+        $user['current_email'] = trim(filter_var($_POST['current_email'], FILTER_SANITIZE_EMAIL));
+        $user['new_email'] = trim(filter_var($_POST['new_email'], FILTER_SANITIZE_EMAIL));
         $user['password'] = $_POST['password'];
 
         if (emptyInput($user)) {
@@ -92,6 +93,12 @@ if (userLoggedIn()) {
 
         if (!validEmail($user['new_email'])) {
             addMessage('Invalid email-adress');
+            header("location: /../../edit.php?edit=email");
+            exit;
+        }
+
+        if ($_SESSION['user']['email'] !== $user['current_email']) {
+            addMessage('Not your email');
             header("location: /../../edit.php?edit=email");
             exit;
         }
@@ -128,16 +135,10 @@ if (userLoggedIn()) {
     }
 
     if (userLoggedin() && isset($_POST['delete_picture'])) {
-        // $url = explode("/app/users", $_SESSION['user']['image_url']);
-        // $url = __DIR__ . $url[1];
         deleteProfilePicture($user['id'], $db);
         addMessage('Profile picture deleted');
         header("location: /../../edit.php?edit=profile_picture");
         exit;
-        // if (realpath($url)) {
-        //     unlink($url);
-        //     addMessage('Profile picture deleted');
-        // }
     }
 
     if (userLoggedin() && isset($_POST['delete_profile'], $_POST['password'], $_POST['password_check'])) {

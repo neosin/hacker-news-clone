@@ -12,6 +12,11 @@ if (isset($_POST['username'], $_POST['signup-email'], $_POST['signup-password'],
         "password-check" => $_POST['password-check'],
     ];
 
+    $_SESSION['return'] = [
+        "user_name" => $newUser['user_name'],
+        "email" => $newUser['email'],
+    ];
+
     if (emptyInput($newUser)) {
         addMessage('Empty fields');
         header("Location: /../../signup.php");
@@ -20,19 +25,22 @@ if (isset($_POST['username'], $_POST['signup-email'], $_POST['signup-password'],
 
     if (userNameExists($newUser['user_name'], $db)) {
         addMessage('Username already registered');
+        unset($_SESSION['return']['user_name']);
         header("Location: /../../signup.php");
         exit;
     }
 
     if (!validEmail($newUser['email'])) {
         addMessage('Invalid email');
+        unset($_SESSION['return']['email']);
         header("Location: /../../signup.php");
         exit;
     }
 
     if (userEmailExists($newUser['email'], $db)) {
         addMessage('Email already registered');
-        header("Location: /../../login.php");
+        unset($_SESSION['return']['email']);
+        header("Location: /../../signup.php");
         exit;
     }
 
@@ -46,7 +54,7 @@ if (isset($_POST['username'], $_POST['signup-email'], $_POST['signup-password'],
     createUser($newUser, $db);
     loginUser($newUser, $db);
     addMessage('Welcome ' . $newUser['user_name'] . "!");
-    unset($newUser);
+    unset($_SESSION['return']);
 }
 
 header("Location: /");

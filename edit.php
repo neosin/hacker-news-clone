@@ -88,8 +88,10 @@ if (!userLoggedIn()) {
         </form>
     <?php elseif ($_GET['edit'] === 'email') : ?>
         <form action="/app/users/profile.php" method="post">
+            <label for="current_email">current email</label>
+            <input type="email" name="current_email" id="current_email">
             <label for="email">new email</label>
-            <input type="email" name="email" id="email" value="<?= $_SESSION['user']['email'] ?>" required>
+            <input type="email" name="new_email" id="new_email" required>
             <label for="password">password</label>
             <input type="password" name="password" id="password" required>
             <button class="warning" type="submit">submit</button>
