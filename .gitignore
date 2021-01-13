@@ -1,5 +1,5 @@
 .DS_Store
 *.numbers
-app/users/uploads/*
+# app/users/uploads/*
 testingGrounds.php
 slask.txt
