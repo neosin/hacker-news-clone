@@ -95,8 +95,7 @@ button,
   height: fit-content;
   font-size: 0.8rem;
   padding: 4px;
-  margin-left: 0px;
-  margin-right: 8px;
+  margin: 8px 8px 8px 0px;
   background-color: rgba(0, 0, 0, 0);
   border-radius: 4px;
   border: 0.5px lightgray solid;

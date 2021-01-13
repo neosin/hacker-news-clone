@@ -147,7 +147,7 @@ function loginUser(array $user, PDO $db): bool
 function deleteUser(int $userId, PDO $db): void
 {
     if (userLoggedIn() && $userId === (int)$_SESSION['user']['id']) {
-        deleteProfilePicture($userId, $db);
+        // deleteProfilePicture($userId, $db);
 
         $sqlQueries = [
             "DELETE FROM users WHERE id = :id",
@@ -313,6 +313,14 @@ function deleteProfilePicture(int $userId, PDO $db): void
 
     if (!$stmnt) {
         die(var_dump($db->errorInfo()));
+    }
+
+    if (isset($_SESSION['user']['image_url'])) {
+        $imageUrl = explode("/app", $_SESSION['user']['image_url']);
+        $imageUrl = __DIR__ . $imageUrl[1];
+        if (realpath($imageUrl)) {
+            unlink($imageUrl);
+        }
     }
 }
 

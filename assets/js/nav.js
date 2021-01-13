@@ -22,14 +22,16 @@ if (window.location.href.includes("top")) {
 }
 
 // please fix
-// const articleBox = document.querySelector("section.posts");
-// if (articleBox) {
-//     const clickables = articleBox.querySelectorAll("article");
-//     clickables.forEach((clickable) => {
-//         let viewPage = clickable.querySelector("a.view");
-//         viewPage = viewPage.href;
-//         clickable.addEventListener("click", (e) => {
-//             window.location.href = viewPage;
-//         });
-//     });
-// }
+const articleBox = document.querySelector("section.posts");
+if (articleBox) {
+  const clickables = articleBox.querySelectorAll("article");
+  clickables.forEach((clickable) => {
+    let viewPage = clickable.querySelector("a.view");
+    viewPage = viewPage.href;
+    clickable.addEventListener("click", (e) => {
+      if (!e.target.matches("button.vote")) {
+        window.location.href = viewPage;
+      }
+    });
+  });
+}

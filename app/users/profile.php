@@ -21,27 +21,31 @@ if (userLoggedIn()) {
                 break;
             case '':
                 addMessage('You need to select a file to upload of the format gif, png or jpeg');
-                header("location: /../../edit.php?edit=profile");
+                header("location: /../../edit.php?edit=profile_picture");
                 exit;
                 break;
             default:
                 addMessage('Unsupported format, choose gif, png or jpeg');
-                header("location: /../../edit.php?edit=profile");
+                header("location: /../../edit.php?edit=profile_picture");
                 exit;
                 break;
         }
 
         if ($_FILES['profile_picture']['size'] >= 2000000) {
             addMessage('File is to big, needs to be smaller than 2mb');
-            header("location: /../../edit.php?edit=profile");
+            header("location: /../../edit.php?edit=profile_picture");
             exit;
+        }
+
+        if (isset($_SESSION['user']['image_url'])) {
+            deleteProfilePicture($user['id'], $db);
         }
 
         $dest = __DIR__ . '/uploads/' . $_SESSION['user']['user_name'] . '-profile-picture-' . $_FILES['profile_picture']['name'];
         move_uploaded_file($_FILES['profile_picture']['tmp_name'], $dest);
         editProfilePicture($user['id'], $dest, $db);
         addMessage("Profile picture updated");
-        header("location: /../../edit.php?edit=profile");
+        header("location: /../../edit.php?edit=profile_picture");
         exit;
     }
 
@@ -124,13 +128,16 @@ if (userLoggedIn()) {
     }
 
     if (userLoggedin() && isset($_POST['delete_picture'])) {
-        $url = explode("/app/users", $_SESSION['user']['image_url']);
-        $url = __DIR__ . $url[1];
-        if (realpath($url)) {
-            unlink($url);
-            addMessage('Profile picture deleted');
-            deleteProfilePicture($user['id'], $db);
-        }
+        // $url = explode("/app/users", $_SESSION['user']['image_url']);
+        // $url = __DIR__ . $url[1];
+        deleteProfilePicture($user['id'], $db);
+        addMessage('Profile picture deleted');
+        header("location: /../../edit.php?edit=profile_picture");
+        exit;
+        // if (realpath($url)) {
+        //     unlink($url);
+        //     addMessage('Profile picture deleted');
+        // }
     }
 
     if (userLoggedin() && isset($_POST['delete_profile'], $_POST['password'], $_POST['password_check'])) {
