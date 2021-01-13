@@ -134,7 +134,6 @@ if (userLoggedIn()) {
     }
 
     if (userLoggedin() && isset($_POST['delete_profile'], $_POST['password'], $_POST['password_check'])) {
-
         $password = $_POST['password'];
         $passwordRepeat = $_POST['password_check'];
 

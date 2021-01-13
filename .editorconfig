@@ -9,7 +9,7 @@ trim_trailing_whitespace = false
 insert_final_newline = false
 
 [*.js]
-indent_size = 4;
+indent_size = 3;
 
 [*.php]
 indent_size = 4
