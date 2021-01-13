@@ -54,53 +54,40 @@ function getAge(string $birth): string
     return "today";
 }
 
-function addReturnPage(): void // don't use until fixed.
-{
-    if (isset($_SESSION['return'])) {
-        unset($_SESSION['return']);
-    }
+// function addReturnPage(): void // don't use until fixed.
+// {
+//     if (isset($_SESSION['return'])) {
+//         unset($_SESSION['return']);
+//     }
 
-    if (isset($_SERVER['QUERY_STRING'])) {
-        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
-    } else {
-        $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
-    }
-}
+//     if (isset($_SERVER['QUERY_STRING'])) {
+//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+//     } else {
+//         $_SESSION['return'] = "Location: " . $_SERVER['PHP_SELF'];
+//     }
+// }
 
-function redirectToPage(string $url = null): void // don't use until fixed.
-{
-    if (!$url) {
-        if (isset($_SESSION['return'])) {
-            // header($_SESSION['return']);
-            echo $_SESSION['return'];
-            unset($_SESSION['return']);
-        } else {
-            // header("Location: /");
-            echo "Location: /";
-        }
-    } else {
-        // header("Location: $url");
-        echo "Location: $url";
-    }
-}
-
-function pageActive(string $url): string
-{
-    if (isset($_SERVER['QUERY_STRING'])) {
-        $activeUrl = $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
-    } else {
-        $activeUrl = $_SERVER['PHP_SELF'];
-    }
-    if ($activeUrl === $url) {
-        return "active";
-    } else {
-        return "";
-    }
-}
+// function redirectToPage(string $url = null): void // don't use until fixed.
+// {
+//     if (!$url) {
+//         if (isset($_SESSION['return'])) {
+//             // header($_SESSION['return']);
+//             echo $_SESSION['return'];
+//             unset($_SESSION['return']);
+//         } else {
+//             // header("Location: /");
+//             echo "Location: /";
+//         }
+//     } else {
+//         // header("Location: $url");
+//         echo "Location: $url";
+//     }
+// }
 
 // user functions
 
-function setUserData(array $user, PDO $db): void //return array?
+// sets user-data to display updates correctly
+function setUserData(array $user, PDO $db): void
 {
     $id = $user['id'];
     $stmnt = $db->prepare("SELECT id, user_name, email, bio, image_url FROM users WHERE id = :id");
@@ -176,7 +163,7 @@ function deleteUser(int $userId, PDO $db): void
 
                 $results = $stmnt->fetchAll(PDO::FETCH_ASSOC);
 
-                if ($results) {
+                if ($results) { // this if-statement deletes any replies on user comments.
                     foreach ($results as $result) {
                         $commentId = $result['id'];
                         $stmnt = $db->prepare("DELETE FROM comments WHERE reply = :comment_id");
@@ -275,8 +262,6 @@ function createUser(array $newUser, PDO $db): void
     }
 }
 
-// validUserName ?
-
 // profile functions
 
 function editUserName(int $id, string $userName, PDO $db): void
@@ -317,6 +302,7 @@ function editEmail(int $id, string $newEmail, PDO $db): void
 
 function editProfilePicture(int $id, string $imageURL, PDO $db): void
 {
+    // makes the url usable, there's probably a smarter way.
     $imageURL = explode("/app", $imageURL);
     $imageURL = '/app' . $imageURL[1];
 
@@ -340,7 +326,7 @@ function deleteProfilePicture(int $userId, PDO $db): void
         die(var_dump($db->errorInfo()));
     }
 
-    if (isset($_SESSION['user']['image_url'])) {
+    if (isset($_SESSION['user']['image_url'])) { // this if-statement deletes the file from the uploads folder
         $imageUrl = explode("/app", $_SESSION['user']['image_url']);
         $imageUrl = __DIR__ . $imageUrl[1];
         if (realpath($imageUrl)) {
@@ -428,7 +414,7 @@ function searchPosts(string $searchQuery, PDO $db): ?array
             GROUP BY post_id
         ) c
         ON p.id = c.post_id
-        WHERE p.title LIKE :query
+        WHERE p.title LIKE :query OR p.description LIKE :query
         ORDER BY upvotes DESC, p.creation_time DESC;"
     );
     $stmnt->bindParam(":query", $searchQuery, PDO::PARAM_STR);
@@ -536,6 +522,7 @@ function deletePost(int $userId, int $postId, PDO $db): void
         "DELETE FROM posts WHERE id = :post_id AND user_id = :user_id;",
         "DELETE FROM upvotes WHERE post_id = :post_id;",
         "DELETE FROM comments WHERE post_id = :post_id;",
+        "DELETE FROM comments WHERE reply = :post_id;",
     ];
 
     for ($i = 0; $i < sizeof($sql); $i++) {
@@ -722,7 +709,7 @@ function fetchCommentForEdit(int $commentId, int $userId, PDO $db): ?array
     return $result;
 }
 
-function fetchComment(int $commentId, PDO $db): ?array
+function fetchComment(int $commentId, PDO $db): ?array // ?
 {
     $stmnt = $db->prepare("SELECT * FROM comments WHERE id = :comment_id;");
     $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
@@ -744,7 +731,6 @@ function fetchComment(int $commentId, PDO $db): ?array
 // print posts functions
 function fetchPost(int $postId, PDO $db): ?array
 {
-    // $stmnt = $db->prepare("SELECT * FROM posts WHERE id = :post_id");
     $stmnt = $db->prepare("SELECT 
     p.*,
     COALESCE(v.upvote_count, 0) AS upvotes,

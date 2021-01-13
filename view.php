@@ -205,7 +205,7 @@ if (isset($_GET['view'])) {
     <?php endif; ?>
     <?php if (isset($_SESSION['messages'])) : ?>
         <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p class="error"><?= $message ?></p>
+            <p class="message"><?= $message ?></p>
         <?php endforeach; ?>
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>

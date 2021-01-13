@@ -14,8 +14,6 @@ if (isset($_POST['email'], $_POST['password'])) {
         header("location: /../../login.php");
         exit;
     }
-
-    unset($user);
 }
 
 header("Location: /");

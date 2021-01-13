@@ -167,5 +167,4 @@ if (userLoggedIn()) {
     }
 }
 
-// header("location: /../../profile.php");
 header("location: /../../edit.php?edit=profile");

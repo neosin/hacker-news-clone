@@ -9,7 +9,7 @@ if (userLoggedIn() && isset($_POST['post_id'])) {
     $postId = (int)filter_var($_POST['post_id'], FILTER_SANITIZE_NUMBER_INT);
     $post = fetchPost($postId, $db);
 
-    if (isset($_POST['title']) && $_POST['title'] !== $post['title']) { //validate title?
+    if (isset($_POST['title']) && $_POST['title'] !== $post['title']) {
         $newTitle = trim(filter_var($_POST['title'], FILTER_SANITIZE_STRING));
         editPostTitle($userId, $postId, $newTitle, $db);
         addMessage('Title changed');

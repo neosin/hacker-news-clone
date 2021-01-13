@@ -77,67 +77,75 @@ if (!userLoggedIn()) {
             <?php endif; ?>
         </section>
     <?php elseif ($_GET['edit'] === 'password') : ?>
-        <form action="/app/users/profile.php" method="post">
-            <label for="current_password">current password</label>
-            <input type="password" name="current_password" id="current_password" required>
-            <label for="new_password">new password</label>
-            <input type="password" name="new_password" id="new_password" required>
-            <label for="password_check">repeat new password</label>
-            <input type="password" name="password_check" id="password_check" required>
-            <button type="submit">submit</button>
-        </form>
+        <section class="edit-password">
+            <form action="/app/users/profile.php" method="post">
+                <label for="current_password">current password</label>
+                <input type="password" name="current_password" id="current_password" required>
+                <label for="new_password">new password</label>
+                <input type="password" name="new_password" id="new_password" required>
+                <label for="password_check">repeat new password</label>
+                <input type="password" name="password_check" id="password_check" required>
+                <button type="submit">submit</button>
+            </form>
+        </section>
     <?php elseif ($_GET['edit'] === 'email') : ?>
-        <form action="/app/users/profile.php" method="post">
-            <label for="current_email">current email</label>
-            <input type="email" name="current_email" id="current_email">
-            <label for="email">new email</label>
-            <input type="email" name="new_email" id="new_email" required>
-            <label for="password">password</label>
-            <input type="password" name="password" id="password" required>
-            <button class="warning" type="submit">submit</button>
-        </form>
+        <section class="edit-mail">
+            <form action="/app/users/profile.php" method="post">
+                <label for="current_email">current email</label>
+                <input type="email" name="current_email" id="current_email">
+                <label for="email">new email</label>
+                <input type="email" name="new_email" id="new_email" required>
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" required>
+                <button class="warning" type="submit">submit</button>
+            </form>
+        </section>
     <?php elseif ($_GET['edit'] === 'post') : ?>
-        <form action="/app/posts/edit.php" method="post">
-            <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
-            <label for="title">title</label>
-            <input type="text" name="title" id="title" value="<?= $post['title'] ?>" required>
-            <label for="description">description</label>
-            <textarea id="description" name="description" rows="4" required><?= $post['description'] ?></textarea>
-            <label for="url">url</label>
-            <input type="url" name="url" id="url" value="<?= $post['url'] ?>" required>
-            <button type="submit">submit</button>
-        </form>
-        <form action="/app/posts/edit.php" method="post">
-            <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
-            <input type="hidden" name="delete" id="delete" value="true">
-            <button class="delete" type="submit">delete post</button>
-        </form>
+        <section class="edit-post">
+            <form action="/app/posts/edit.php" method="post">
+                <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
+                <label for="title">title</label>
+                <input type="text" name="title" id="title" value="<?= $post['title'] ?>" required>
+                <label for="description">description</label>
+                <textarea id="description" name="description" rows="4" required><?= $post['description'] ?></textarea>
+                <label for="url">url</label>
+                <input type="url" name="url" id="url" value="<?= $post['url'] ?>" required>
+                <button type="submit">submit</button>
+            </form>
+            <form action="/app/posts/edit.php" method="post">
+                <input type="hidden" name="post_id" id="post_id" value="<?= $post['id'] ?>">
+                <input type="hidden" name="delete" id="delete" value="true">
+                <button class="delete" type="submit">delete post</button>
+            </form>
+        </section>
     <?php elseif ($_GET['edit'] === 'comment') : ?>
-        <form action="/app/posts/comment.php" method="post">
-            <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
-            <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
-            <label for="edited_comment">edit comment</label>
-            <textarea id="edited_comment" name="edited_comment" rows="4" required><?= $comment['comment'] ?></textarea>
-            <button type="submit">submit</button>
-        </form>
-        <form action="/app/posts/comment.php" method="post">
-            <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
-            <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
-            <input type="hidden" name="delete" id="delete" value="true">
-            <button class="delete">delete comment</button>
-        </form>
-    <?php elseif ($_GET['edit'] === 'reply') : ?>
-        <div class="comment">
-            <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
-            <p><?= $comment['comment'] ?></p>
-        </div>
-        <form action="/app/posts/comment.php" method="post">
-            <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
-            <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
-            <label for="edited_comment">reply</label>
-            <textarea id="reply" name="reply" rows="4" required></textarea>
-            <button type="submit">submit</button>
-        </form>
+        <section class="edit-comment">
+            <form action="/app/posts/comment.php" method="post">
+                <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
+                <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
+                <label for="edited_comment">edit comment</label>
+                <textarea id="edited_comment" name="edited_comment" rows="4" required><?= $comment['comment'] ?></textarea>
+                <button type="submit">submit</button>
+            </form>
+            <form action="/app/posts/comment.php" method="post">
+                <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
+                <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
+                <input type="hidden" name="delete" id="delete" value="true">
+                <button class="delete">delete comment</button>
+            </form>
+        <?php elseif ($_GET['edit'] === 'reply') : ?>
+            <div class="comment">
+                <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
+                <p><?= $comment['comment'] ?></p>
+            </div>
+            <form action="/app/posts/comment.php" method="post">
+                <input type="hidden" name="comment_id" id="comment_id" value="<?= $comment['id'] ?>">
+                <input type="hidden" name="post_id" id="post_id" value="<?= $comment['post_id'] ?>">
+                <label for="edited_comment">reply</label>
+                <textarea id="reply" name="reply" rows="4" required></textarea>
+                <button type="submit">submit</button>
+            </form>
+        </section>
     <?php elseif ($_GET['edit'] === 'delete_profile') : ?>
         <section class="delete-profile">
             <p>Warning, if you choose to delete your profile there's no going back!</p>

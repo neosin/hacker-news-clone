@@ -14,7 +14,7 @@ if (isset($_SESSION['return'])) {
 
 ?>
 <main>
-    <section>
+    <section class="signup">
         <h1>signup</h1>
         <form action="/app/users/signup.php" method="post">
             <label for="username">username</label>
@@ -30,7 +30,7 @@ if (isset($_SESSION['return'])) {
     </section>
     <?php if (isset($_SESSION['messages'])) : ?>
         <?php foreach ($_SESSION['messages'] as $message) : ?>
-            <p><?= $message ?></p>
+            <p class="message"><?= $message ?></p>
         <?php endforeach; ?>
         <?php unset($_SESSION['messages']) ?>
     <?php endif; ?>
