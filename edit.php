@@ -133,7 +133,9 @@ if (!userLoggedIn()) {
                 <input type="hidden" name="delete" id="delete" value="true">
                 <button class="delete">delete comment</button>
             </form>
-        <?php elseif ($_GET['edit'] === 'reply') : ?>
+        </section>
+    <?php elseif ($_GET['edit'] === 'reply') : ?>
+        <section class="edit-comment">
             <div class="comment">
                 <a href="/view.php?view=profile&user_id=<?= $comment['user_id'] ?>"><?= fetchPoster((int)$comment['user_id'], $db) ?></a>
                 <p><?= $comment['comment'] ?></p>
