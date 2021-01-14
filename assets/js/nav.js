@@ -17,7 +17,10 @@ if (window.location.href.includes("top")) {
   window.location.href.includes("edit.php")
 ) {
   navItems[3].classList.toggle("active");
-} else if (window.location.href.includes("index.php")) {
+} else if (
+  window.location.href.includes("index.php") ||
+  window.location.href === "http://localhost:8000/"
+) {
   navItems[0].classList.toggle("active");
 }
 
