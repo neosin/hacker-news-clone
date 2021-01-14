@@ -92,7 +92,7 @@ if (!userLoggedIn()) {
         <section class="edit-mail">
             <form action="/app/users/profile.php" method="post">
                 <label for="current_email">current email</label>
-                <input type="email" name="current_email" id="current_email">
+                <input type="email" name="current_email" id="current_email" required>
                 <label for="email">new email</label>
                 <input type="email" name="new_email" id="new_email" required>
                 <label for="password">password</label>

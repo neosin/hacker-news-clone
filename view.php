@@ -164,7 +164,7 @@ if (isset($_GET['view'])) {
             <form action="/view.php" method="get">
                 <label for="search">search</label>
                 <input type="hidden" name="view" id="view" value="search">
-                <input type="text" name="query" id="query" value=<?= $query ?> required>
+                <input type="search" name="query" id="query" value=<?= $query ?> required>
                 <button type="submit">search</button>
             </form>
         </section>

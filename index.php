@@ -42,7 +42,7 @@ if (isset($_GET['order_by'])) {
         <form action="/view.php" method="get">
             <label for="query">search</label>
             <input type="hidden" name="view" id="view" value="search">
-            <input type="text" name="query" id="query" required>
+            <input type="search" name="query" id="query" required>
             <button type="submit">search news</button>
         </form>
     </section>

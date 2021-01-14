@@ -20,7 +20,7 @@ if (isset($_SESSION['return'])) {
             <label for="username">username</label>
             <input type="text" name="username" id="username" value="<?= isset($return['user_name']) ? $return['user_name'] : "" ?>" required>
             <label for="signup-email">email</label>
-            <input type="mail" name="signup-email" id="signup-email" value="<?= isset($return['email']) ? $return['email'] : "" ?>" required>
+            <input type="email" name="signup-email" id="signup-email" value="<?= isset($return['email']) ? $return['email'] : "" ?>" required>
             <label for="signup-password">password</label>
             <input type="password" name="signup-password" id="signup-password" required>
             <label for="password-check">vertify password</label>
