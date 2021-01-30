@@ -39,7 +39,6 @@ if (isset($_SESSION['return'])) {
                 <?php $token = filter_var($_GET['token'], FILTER_SANITIZE_STRING); ?>
                 <?php if (ctype_xdigit($selector) !== false && ctype_xdigit($token) !== false) : ?>
                     <form action="app/users/reset-password.php" method="post">
-
                         <input type="hidden" name="selector" value="<?= $selector; ?>">
                         <input type="hidden" name="token" value="<?= $token; ?>">
                         <label for="new-password">Enter new password</label>
@@ -48,12 +47,10 @@ if (isset($_SESSION['return'])) {
                         <input type="password" name="confirm-password" id="confirm-password" required>
                         <button type="submit">submit</button>
                     </form>
-
                 <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
     <?php else : ?>
-
         <h1>login</h1>
         <form action="/app/users/login.php" method="post">
             <label for="email">Email</label>
