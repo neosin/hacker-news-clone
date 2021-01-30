@@ -944,3 +944,69 @@ function toggleUpvote(int $userId, int $postId, PDO $db): void
         }
     }
 }
+
+// comment votes
+
+
+function fetchCommentUpvotes(int $commentId, PDO $db): int
+{
+    $stmnt = $db->prepare("SELECT COUNT(comment_id) as 'comment_upvotes' FROM comment_upvotes WHERE comment_id = :comment_id;");
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    return (int)$result['comment_upvotes'];
+}
+
+
+
+function userCommentUpvote(int $userId, int $commentId, PDO $db): bool
+{
+    $stmnt = $db->prepare("SELECT * FROM comment_upvotes WHERE user_id = :user_id AND comment_id = :comment_id");
+    $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+    $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+    $stmnt->execute();
+
+    if (!$stmnt) {
+        die(var_dump($db->errorInfo()));
+    }
+
+    $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result) {
+        return false;
+    }
+
+    return true;
+}
+
+
+
+
+function toggleCommentUpvote(int $userId, int $commentId, PDO $db): void
+{
+    if (userCommentUpvote($userId, $commentId, $db)) {
+        $stmnt = $db->prepare("DELETE FROM comment_upvotes WHERE user_id = :user_id AND comment_id = :comment_id");
+        $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+        $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+        $stmnt->execute();
+
+        if (!$stmnt) {
+            die(var_dump($db->errorInfo()));
+        }
+    } else {
+        $stmnt = $db->prepare("INSERT INTO comment_upvotes (user_id, comment_id) VALUES(:user_id, :comment_id)");
+        $stmnt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+        $stmnt->bindParam(":comment_id", $commentId, PDO::PARAM_INT);
+        $stmnt->execute();
+
+        if (!$stmnt) {
+            die(var_dump($db->errorInfo()));
+        }
+    }
+}
