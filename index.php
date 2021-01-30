@@ -25,6 +25,7 @@ if (isset($_GET['order_by'])) {
     }
 }
 
+
 ?>
 <header>
     <h1>news</h1>
