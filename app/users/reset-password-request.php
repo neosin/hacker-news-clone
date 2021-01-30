@@ -71,6 +71,5 @@ try {
 
     header('location: /../../login.php?login=check_mail');
 } catch (Exception $e) {
-
     header('/../../login.php');
 }

@@ -16,9 +16,7 @@ if (isset($_SESSION['return'])) {
 
 <section class="login">
     <?php if (isset($_GET['login'])) : ?>
-
         <?php if ($_GET['login'] === 'recover_password' || $_GET['login'] === 'process_expired') : ?>
-
             <h1>password assistance</h1>
 
             <form action="app/users/reset-password-request.php" method="post">
@@ -55,7 +53,6 @@ if (isset($_SESSION['return'])) {
             <?php endif; ?>
         <?php endif; ?>
     <?php else : ?>
-
 
         <h1>login</h1>
         <form action="/app/users/login.php" method="post">
