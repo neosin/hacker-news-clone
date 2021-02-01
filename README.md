@@ -97,3 +97,7 @@ php -S localhost:8000
 - Grasping at straws to come up with things to comment on, but one last thing could be to move submit post down towards the posts so it's even esier to navigate 
 
 - I'm superimpressed, really well done! :)
+
+## New features added by [Lucas](https://github.com/pnpjss):
+
+[Reset password via email and comment upvotes](https://github.com/simonlindstedt/hacker-news-clone/pull/2)
