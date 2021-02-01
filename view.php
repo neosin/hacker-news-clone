@@ -53,6 +53,7 @@ if (isset($_GET['view'])) {
                         <button class="vote active" data-post="<?= $post['id'] ?>">▲</button>
                     <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $post['id'], $db)) : ?>
                         <button class="vote" data-post="<?= $post['id'] ?>">▲</button>
+
                     <?php else : ?>
                         <button class="vote">▲</button>
                     <?php endif; ?>
@@ -80,13 +81,43 @@ if (isset($_GET['view'])) {
                     <?php foreach ($postComments as $postComment) : ?>
                         <div class="comment">
                             <small>posted <?= getAge($postComment['creation_time']) ?></small>
+                            <!-- If user is online & if user has liked comment show like button as "active", i.e. with orange decor -->
+                            <?php if (userLoggedIn() && userCommentUpvote($_SESSION['user']['id'], $postComment['id'], $db)) :  ?>
+                                <button class="comment-vote-button active" data-comment="<?= $postComment['id']; ?>">▲</button>
+                                <!-- If user is online but has not liked comment show normal button i.e. no orange decor -->
+                            <?php elseif (userLoggedIn() && !userCommentUpvote($_SESSION['user']['id'], $postComment['id'], $db)) : ?>
+                                <button class="comment-vote-button" data-comment="<?= $postComment['id']; ?>">▲</button>
+                                <!-- If user is offline show button, button redirects offline visitor to login page -->
+                            <?php else : ?>
+                                <button class="comment-vote-button">▲</button>
+                            <?php endif; ?>
+
+                            <?php $commentId = $postComment['id']; ?>
+                            <?php $commentLikes = fetchCommentUpvotes($commentId, $db); ?>
+
+
+                            <p class="comment-upvotes"><?= $commentLikes; ?></p>
                             <a href="/view.php?view=profile&user_id=<?= $postComment['user_id'] ?>"><?= fetchPoster((int)$postComment['user_id'], $db) ?> says:</a>
                             <p class="comment"><?= $postComment['comment'] ?></p>
                             <?php if (isset($commentReplies)) : ?>
                                 <?php foreach ($commentReplies as $commentReply) : ?>
                                     <?php if ($commentReply['reply'] === $postComment['id']) : ?>
                                         <div class="comment reply">
+                                            <?php if (userLoggedIn() && userCommentUpvote($_SESSION['user']['id'], $commentReply['id'], $db)) :  ?>
+                                                <button class="comment-vote-button active" data-comment="<?= $commentReply['id']; ?>">▲</button>
+                                                <!-- If user is online but has not liked comment show normal button i.e. no orange decor -->
+                                            <?php elseif (userLoggedIn() && !userCommentUpvote($_SESSION['user']['id'], $commentReply['id'], $db)) : ?>
+                                                <button class="comment-vote-button" data-comment="<?= $commentReply['id']  ?>">▲</button>
+                                                <!-- If user is offline show button, button redirects offline visitor to login page -->
+                                            <?php else : ?>
+                                                <button class="comment-vote-button">▲</button>
+                                            <?php endif; ?>
+                                            <?php $commentId = $commentReply['id']; ?>
+                                            <?php $commentLikes = fetchCommentUpvotes($commentId, $db); ?>
+                                            <p class="comment-upvotes"><?= $commentLikes; ?></p>
+
                                             <small>posted <?= getAge($commentReply['creation_time']) ?></small>
+
                                             <a href="/view.php?view=profile&user_id=<?= $commentReply['user_id'] ?>"><?= fetchPoster((int)$commentReply['user_id'], $db) ?> replies: </a>
                                             <p class="comment"><?= $commentReply['comment'] ?></p>
                                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $commentReply['user_id']) : ?>
@@ -98,6 +129,7 @@ if (isset($_GET['view'])) {
                             <?php endif; ?>
                             <?php if (userLoggedIn()) : ?>
                                 <a class="button" href="/edit.php?edit=reply&comment_id=<?= $postComment['id'] ?>">reply</a>
+
                             <?php endif; ?>
                             <?php if (userLoggedIn() && $_SESSION['user']['id'] === $postComment['user_id']) : ?>
                                 <a class="button" href="/edit.php?edit=comment&comment_id=<?= $postComment['id'] ?>">edit comment</a>
@@ -180,7 +212,7 @@ if (isset($_GET['view'])) {
                             <?php elseif (userLoggedIn() && !userUpvote($_SESSION['user']['id'], $searchResult['id'], $db)) : ?>
                                 <button class="vote" data-post="<?= $searchResult['id'] ?>">▲</button>
                             <?php else : ?>
-                                <button class="vote">▲</button>
+                                <button class="comment-vote">▲</button>
                             <?php endif; ?>
                             <p class="upvotes"><?= $searchResult['upvotes'] ?></p>
                         </div>

@@ -1,0 +1,14 @@
+{
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "require": {
+    "phpmailer/phpmailer": "^6.2",
+    "psr/log": "^1.1",
+    "league/oauth2-client": "^2.6",
+    "guzzlehttp/guzzle": "^7.2",
+    "ralouphie/getallheaders": "^3.0"
+  }
+}
